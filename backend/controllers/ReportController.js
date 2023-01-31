@@ -4,8 +4,10 @@ import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import path from "path";
+import { v2 as cloudinary } from "cloudinary";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
 
 const allTemplates = [
   {
@@ -71,6 +73,30 @@ export const createReport = async (req, res) => {
       buffer
     );
     res.status(201).json({ msg: "ok" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const uploadImages = async (req, res) => {
+  try {
+    let images = [];
+
+    if (req.files.image.length > 0) images = req.files.image;
+    else images.push(req.files.image);
+
+    const imageLinks = [];
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.uploader.upload(images[i].tempFilePath, {
+        use_filename: true,
+        folder: "reports",
+        quality: 30,
+      });
+      fs.unlinkSync(images[i].tempFilePath);
+      imageLinks.push({ img: result.secure_url, len: images.length });
+    }
+    return res.status(201).json({ imageLinks });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
