@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   loading: false,
   images: [],
+  details: [],
 };
 
 export const createReport = createAsyncThunk(
@@ -54,7 +55,7 @@ const reportSlice = createSlice({
       })
       .addCase(uploadImage.fulfilled, (state, { payload }) => {
         state.loading = false;
-        console.log(payload);
+        state.images = payload.imageLinks;
       })
       .addCase(uploadImage.rejected, (state, { payload }) => {
         state.loading = false;
