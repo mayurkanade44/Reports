@@ -1,4 +1,11 @@
 import Report from "../models/Report.js";
+import newdoc from "docx-templates";
+import fs from "fs";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const allTemplates = [
   {
@@ -19,12 +26,12 @@ const allTemplates = [
 ];
 
 export const createReport = async (req, res) => {
-  const { templateName, type, details } = req.body;
+  const { reportName, templateName, type, details } = req.body;
   try {
-    if (!templateName || !type)
+    if (!reportName || !templateName || !type)
       return res.status(400).json({ msg: "Please provide all values" });
 
-    const file = "";
+    let file = "";
     allTemplates.forEach((x) => {
       if (x.template === templateName && x.type === type) {
         file = x.file;
@@ -41,16 +48,17 @@ export const createReport = async (req, res) => {
 
       additionalJsContext: {
         data: details,
-        img: async (
-          url = "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg"
+        image: async (
+          url = "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg",
+          len
         ) => {
           const resp = await fetch(url);
           const buffer = resp.arrayBuffer
             ? await resp.arrayBuffer()
             : await resp.buffer();
           return {
-            width: 8,
-            height: 8,
+            width: 16 / len,
+            height: 12 / len,
             data: buffer,
             extension: ".jpg",
           };
@@ -59,11 +67,10 @@ export const createReport = async (req, res) => {
     });
 
     fs.writeFileSync(
-      path.resolve(__dirname, "../files/", `report2.docx`),
+      path.resolve(__dirname, "../files/", `${reportName}.docx`),
       buffer
     );
     res.status(201).json({ msg: "ok" });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
