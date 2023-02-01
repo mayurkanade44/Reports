@@ -11,9 +11,8 @@ export const createReport = createAsyncThunk(
   "report/create",
   async (form, thunkAPI) => {
     try {
-      console.log(form);
-      //   const res = await axios.post("/report/create");
-      //   return res.data;
+      const res = await axios.post("/report/create");
+      return res.data;
     } catch (error) {
       console.log(error);
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -25,7 +24,7 @@ export const uploadImage = createAsyncThunk(
   "report/imgUpload",
   async (form, thunkAPI) => {
     try {
-      const res = await axios.post("/api/report/uploadImage", form);
+      const res = await axios.post("/report/uploadImage", form);
       return res.data;
     } catch (error) {
       console.log(error);
