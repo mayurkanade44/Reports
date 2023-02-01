@@ -1,108 +1,88 @@
-import { useState } from "react";
-import { InputRow } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { uploadImage } from "../redux/reportSlice";
-
-const initialState = {
-  pest: "",
-  floor: "",
-  subFloor: "",
-  location: "",
-  finding: "",
-  suggestion: "",
-};
+import { CreateReport, InputRow, InputSelect } from "../components";
+import { reportHandleChange } from "../redux/reportSlice";
 
 const NewReport = () => {
-  const { loading, images } = useSelector((store) => store.report);
-
-  const [formValue, setFormValue] = useState(initialState);
-  const { pest, floor, subFloor, location, finding, suggestion } = formValue;
-
+  const { loading, templateType, reportType, meetTo, inspectionDate } =
+    useSelector((store) => store.report);
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const templates = [
+    "Single Picture",
+    "Double Pictures",
+    "Before/After Pictures",
+  ];
 
-    setFormValue({ ...formValue, [name]: value });
-  };
-
-  const handleImage = (e) => {
-    const file = Array.from(e.target.files);
-
-    const form = new FormData();
-    file.forEach((image) => {
-      form.append("image", image);
-    });
-    dispatch(uploadImage(form));
-  };
+  const reports = ["RIM"];
 
   return (
-    <div className="container row my-3">
-      <h6 className="text-center">New Report</h6>
+    <div className="row my-3">
       <div className="col-md-6">
-        <InputRow
-          label="Pest"
-          type="text"
-          name="pest"
-          value={pest}
-          handleChange={handleChange}
+        <InputSelect
+          label="Template Type:"
+          name="templateType"
+          value={templateType}
+          data={["Select", ...templates]}
+          handleChange={(e) =>
+            dispatch(
+              reportHandleChange({
+                name: e.target.name,
+                value: e.target.value,
+              })
+            )
+          }
+        />
+      </div>
+      <div className="col-md-6">
+        <InputSelect
+          label="Report Type:"
+          name="reportType"
+          value={reportType}
+          data={["Select", ...reports]}
+          handleChange={(e) =>
+            dispatch(
+              reportHandleChange({
+                name: e.target.name,
+                value: e.target.value,
+              })
+            )
+          }
         />
       </div>
       <div className="col-md-6">
         <InputRow
-          label="Floor"
-          type="text"
-          name="floor"
-          value={floor}
-          handleChange={handleChange}
+          label="Inspection Date:"
+          type="date"
+          name="inspectionDate"
+          value={inspectionDate}
+          handleChange={(e) =>
+            dispatch(
+              reportHandleChange({
+                name: e.target.name,
+                value: e.target.value,
+              })
+            )
+          }
         />
       </div>
       <div className="col-md-6">
         <InputRow
-          label="Sub Floor"
+          label="Meet To:"
           type="text"
-          name="subFloor"
-          value={subFloor}
-          handleChange={handleChange}
+          name="meetTo"
+          value={meetTo}
+          handleChange={(e) =>
+            dispatch(
+              reportHandleChange({
+                name: e.target.name,
+                value: e.target.value,
+              })
+            )
+          }
         />
       </div>
-      <div className="col-md-6">
-        <InputRow
-          label="Location"
-          type="text"
-          name="location"
-          value={location}
-          handleChange={handleChange}
-        />
-      </div>
-      <div className="col-md-6">
-        <InputRow
-          label="Finding"
-          type="text"
-          name="finding"
-          value={finding}
-          handleChange={handleChange}
-        />
-      </div>
-      <div className="col-md-6">
-        <InputRow
-          label="Suggestions"
-          type="text"
-          name="suggestion"
-          value={suggestion}
-          handleChange={handleChange}
-        />
-      </div>
-      <div className="col-md-6">
-        <input type="file" accept="image/*" onChange={handleImage} multiple />
-      </div>
-      <div className="col-md-6 my-2">
-        <button
-          className="btn btn-primary"
-          disabled={images.length > 0 ? false : true}
-        >
-          Add New Page
-        </button>
+      <div className="col-md-6 mt-3 d-flex justify-content-center">
+        <button className="btn btn-primary" >Start Report</button>
       </div>
     </div>
   );
