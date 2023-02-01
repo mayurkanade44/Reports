@@ -3,15 +3,39 @@ import axios from "axios";
 
 const initialState = {
   loading: false,
+  reportName: "RIM test 4",
+  templateType: "",
+  reportType: "",
+  meetTo: "",
+  inspectionDate: "",
+  inspectionBy: "Mallu Yadav",
   images: [],
   details: [],
 };
 
 export const createReport = createAsyncThunk(
   "report/create",
-  async (form, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const res = await axios.post("/report/create");
+      const {
+        reportName,
+        templateType,
+        reportType,
+        meetTo,
+        inspectionBy,
+        inspectionDate,
+        details,
+      } = thunkAPI.getState().report;
+      const form = {
+        reportName,
+        templateType,
+        reportType,
+        meetTo,
+        inspectionBy,
+        inspectionDate,
+        details
+      }
+      const res = await axios.post("/report/create", form);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -36,6 +60,15 @@ export const uploadImage = createAsyncThunk(
 const reportSlice = createSlice({
   name: "report",
   initialState,
+  reducers: {
+    addPage: (state, { payload: { formValue } }) => {
+      state.details.push(formValue);
+      state.images = [];
+    },
+    reportHandleChange: (state, { payload: { name, value } }) => {
+      state[name] = value;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createReport.pending, (state) => {
@@ -62,5 +95,7 @@ const reportSlice = createSlice({
       });
   },
 });
+
+export const { addPage, reportHandleChange } = reportSlice.actions;
 
 export default reportSlice.reducer;
