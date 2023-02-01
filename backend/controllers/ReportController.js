@@ -8,34 +8,34 @@ import { v2 as cloudinary } from "cloudinary";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-
 const allTemplates = [
   {
-    template: "Single Picture",
-    type: "RIM",
+    templateType: "Single Picture",
+    reportType: "RIM",
     file: "SinglePictureRIM",
   },
   {
-    template: "Double Picture",
-    type: "RIM",
+    templateType: "Double Picture",
+    reportType: "RIM",
     file: "DoublePictureRIM",
   },
   {
-    template: "Double Picture B/A",
-    type: "RIM",
+    templateType: "Double Picture B/A",
+    reportType: "RIM",
     file: "DoublePictureBARIM",
   },
 ];
 
 export const createReport = async (req, res) => {
-  const { reportName, templateName, type, details } = req.body;
+  const { reportName, templateType, reportType, details } = req.body;
   try {
-    if (!reportName || !templateName || !type)
+  
+    if (!reportName || !templateType || !reportType)
       return res.status(400).json({ msg: "Please provide all values" });
 
     let file = "";
     allTemplates.forEach((x) => {
-      if (x.template === templateName && x.type === type) {
+      if (x.templateType === templateType && x.reportType === reportType) {
         file = x.file;
       }
     });
