@@ -13,7 +13,7 @@ const initialState = {
 };
 
 const CreateReport = () => {
-  const { loading, images, reportName, details } = useSelector(
+  const { loading, images, reportName, details, reportType } = useSelector(
     (store) => store.report
   );
   const [lastPage, setLastPage] = useState(false);
@@ -40,6 +40,7 @@ const CreateReport = () => {
   };
 
   const next = () => {
+    if(reportType === "RIM") formValue.pest = "Rodent"
     formValue.image = images;
     dispatch(addPage({ formValue }));
     setTimeout(() => {
@@ -65,15 +66,17 @@ const CreateReport = () => {
         <h6 className="text-center">New Report</h6>
         {!lastPage ? (
           <>
-            <div className="col-md-6">
-              <InputRow
-                label="Pest"
-                type="text"
-                name="pest"
-                value={pest}
-                handleChange={handleChange}
-              />
-            </div>
+            {reportType !== "RIM" && (
+              <div className="col-md-6">
+                <InputRow
+                  label="Pest"
+                  type="text"
+                  name="pest"
+                  value={pest}
+                  handleChange={handleChange}
+                />
+              </div>
+            )}
             <div className="col-md-6">
               <InputRow
                 label="Floor"
@@ -152,7 +155,9 @@ const CreateReport = () => {
               <h3>Report Name - {reportName}</h3>
               <h4>Report Pages - {details.length + 2}</h4>
               <h4>Report By - Mallu Yadav</h4>
-              <button className="btn btn-success" type="submit">Generate Report</button>
+              <button className="btn btn-success" type="submit">
+                Generate Report
+              </button>
             </div>
           </>
         )}

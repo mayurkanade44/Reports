@@ -23,7 +23,7 @@ const InputSelect = ({
           name={name}
           value={value}
           onChange={handleChange}
-          style={{ width: width }}
+          required
         >
           {data.map((data) => {
             return (

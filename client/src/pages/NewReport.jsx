@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CreateReport, InputRow, InputSelect } from "../components";
 import { reportHandleChange } from "../redux/reportSlice";
@@ -6,6 +7,7 @@ const NewReport = () => {
   const { loading, templateType, reportType, meetTo, inspectionDate } =
     useSelector((store) => store.report);
   const dispatch = useDispatch();
+  const [showReport, setShowReport] = useState(false);
 
   const templates = [
     "Single Picture",
@@ -15,7 +17,15 @@ const NewReport = () => {
 
   const reports = ["RIM"];
 
-  return (
+  const startReport = () => {
+    setTimeout(() => {
+      setShowReport(true);
+    }, 500);
+  };
+
+  return showReport ? (
+    <CreateReport />
+  ) : (
     <div className="row my-3">
       <div className="col-md-6">
         <InputSelect
@@ -82,7 +92,17 @@ const NewReport = () => {
         />
       </div>
       <div className="col-md-6 mt-3 d-flex justify-content-center">
-        <button className="btn btn-primary" >Start Report</button>
+        <button
+          className="btn btn-primary"
+          onClick={startReport}
+          disabled={
+            !templateType || !reportType || !meetTo || !inspectionDate
+              ? true
+              : false
+          }
+        >
+          Start Report
+        </button>
       </div>
     </div>
   );
