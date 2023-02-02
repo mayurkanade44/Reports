@@ -26,7 +26,7 @@ const NewReport = () => {
   return showReport ? (
     <CreateReport />
   ) : (
-    <div className="row my-3">
+    <div className="row my-3 d-flex flex-column min-vh-100 justify-content-center align-items-center">
       <div className="col-md-6">
         <InputSelect
           label="Template Type:"
