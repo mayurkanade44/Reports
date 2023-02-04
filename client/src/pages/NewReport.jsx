@@ -4,8 +4,17 @@ import { CreateReport, InputRow, InputSelect } from "../components";
 import { reportHandleChange } from "../redux/reportSlice";
 
 const NewReport = () => {
-  const { templateType, reportType, meetTo, inspectionDate } =
-    useSelector((store) => store.report);
+  const {
+    templateType,
+    reportType,
+    meetTo,
+    meetContact,
+    meetEmail,
+    shownTo,
+    shownContact,
+    shownEmail,
+    inspectionDate,
+  } = useSelector((store) => store.report);
   const dispatch = useDispatch();
   const [showReport, setShowReport] = useState(false);
 
@@ -23,6 +32,11 @@ const NewReport = () => {
     }, 500);
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    dispatch(reportHandleChange({ name, value }));
+  };
+
   return showReport ? (
     <CreateReport />
   ) : (
@@ -33,14 +47,7 @@ const NewReport = () => {
           name="templateType"
           value={templateType}
           data={["Select", ...templates]}
-          handleChange={(e) =>
-            dispatch(
-              reportHandleChange({
-                name: e.target.name,
-                value: e.target.value,
-              })
-            )
-          }
+          handleChange={handleChange}
         />
       </div>
       <div className="col-md-6">
@@ -49,14 +56,7 @@ const NewReport = () => {
           name="reportType"
           value={reportType}
           data={["Select", ...reports]}
-          handleChange={(e) =>
-            dispatch(
-              reportHandleChange({
-                name: e.target.name,
-                value: e.target.value,
-              })
-            )
-          }
+          handleChange={handleChange}
         />
       </div>
       <div className="col-md-6">
@@ -65,14 +65,7 @@ const NewReport = () => {
           type="date"
           name="inspectionDate"
           value={inspectionDate}
-          handleChange={(e) =>
-            dispatch(
-              reportHandleChange({
-                name: e.target.name,
-                value: e.target.value,
-              })
-            )
-          }
+          handleChange={handleChange}
         />
       </div>
       <div className="col-md-6">
@@ -81,14 +74,52 @@ const NewReport = () => {
           type="text"
           name="meetTo"
           value={meetTo}
-          handleChange={(e) =>
-            dispatch(
-              reportHandleChange({
-                name: e.target.name,
-                value: e.target.value,
-              })
-            )
-          }
+          handleChange={handleChange}
+        />
+      </div>
+      <div className="col-md-6">
+        <InputRow
+          label="Meet Contact:"
+          type="text"
+          name="meetContact"
+          value={meetContact}
+          handleChange={handleChange}
+        />
+      </div>
+      <div className="col-md-6">
+        <InputRow
+          label="Meet Email:"
+          type="email"
+          name="meetEmail"
+          value={meetEmail}
+          handleChange={handleChange}
+        />
+      </div>
+      <div className="col-md-6">
+        <InputRow
+          label="Show To:"
+          type="text"
+          name="shownTo"
+          value={shownTo}
+          handleChange={handleChange}
+        />
+      </div>
+      <div className="col-md-6">
+        <InputRow
+          label="Shown Contact:"
+          type="text"
+          name="shownContact"
+          value={shownContact}
+          handleChange={handleChange}
+        />
+      </div>
+      <div className="col-md-6">
+        <InputRow
+          label="Shown Email:"
+          type="email"
+          name="shownEmail"
+          value={shownEmail}
+          handleChange={handleChange}
         />
       </div>
       <div className="col-md-6 mt-3 d-flex justify-content-center">
@@ -96,7 +127,11 @@ const NewReport = () => {
           className="btn btn-primary"
           onClick={startReport}
           disabled={
-            !templateType || !reportType || !meetTo || !inspectionDate
+            !templateType ||
+            !reportType ||
+            !meetTo ||
+            !inspectionDate ||
+            !shownTo
               ? true
               : false
           }
