@@ -13,12 +13,12 @@ code {
 }
 
 @media (max-width: 767px) {
-  .input-row h4 {
+  .input-row h4,
+  .img {
     font-size: 18px;
     margin-top: 5px;
   }
   .input-row .form-control {
     height: 28px;
   }
-  
 }

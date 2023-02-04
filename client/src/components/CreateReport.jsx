@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { InputRow } from ".";
+import { InputRow, InputSelect } from ".";
 import { useDispatch, useSelector } from "react-redux";
 import { addPage, createReport, uploadImage } from "../redux/reportSlice";
 
@@ -53,6 +53,9 @@ const CreateReport = () => {
 
     dispatch(uploadImage(form));
   };
+
+  const findings = ["Cracks", "Holes"];
+  const suggestions = ["Seal cracks", "Seal holes"];
 
   const next = () => {
     if (reportType === "RIM") formValue.pest = "Rodent";
@@ -123,30 +126,44 @@ const CreateReport = () => {
               />
             </div>
             <div className="col-md-6">
-              <InputRow
+              <InputSelect
+                label="Findings:"
+                name="finding"
+                value={finding}
+                data={["Select", ...findings]}
+                handleChange={handleChange}
+              />
+              {/* <InputRow
                 label="Finding"
                 type="text"
                 name="finding"
                 value={finding}
                 handleChange={handleChange}
-              />
+              /> */}
             </div>
             <div className="col-md-6">
-              <InputRow
+              <InputSelect
+                label="Suggestions:"
+                name="suggestion"
+                value={suggestion}
+                data={["Select", ...suggestions]}
+                handleChange={handleChange}
+              />
+              {/* <InputRow
                 label="Suggestions"
                 type="text"
                 name="suggestion"
                 value={suggestion}
                 handleChange={handleChange}
-              />
+              /> */}
             </div>
-            <div className="col-md-6 my-2 d-flex">
-              <label>Image1:</label>
+            <div className="col-md-6 mt-3 mb-2 d-flex">
+              <h4 className="img me-1">Image1:</h4>
               <input type="file" accept="image/*" onChange={handleImage1} />
             </div>
             {templateType !== "Single Picture" && (
               <div className="col-md-6 my-2 d-flex">
-                <label>Image2:</label>
+                <h4 className="img me-1">Image2:</h4>
                 <input type="file" accept="image/*" onChange={handleImage2} />
               </div>
             )}
@@ -194,8 +211,10 @@ const CreateReport = () => {
               <h4>Report Name - {reportName}</h4>
               <h4>Report Pages - {details.length + 2}</h4>
               <h4>Report By - {inspectionBy}</h4>
+            </div>
+            <div className="col-md-6 d-flex justify-content-center mt-5">
               <button
-                className="btn btn-success mt-5"
+                className="btn btn-success mt"
                 type="submit"
                 disabled={loading || details.length === 0 ? true : false}
               >
