@@ -12,24 +12,31 @@ const allTemplates = [
   {
     templateType: "Single Picture",
     reportType: "RIM",
-    file: "SinglePictureRIM",
+    file: "PictureRIM",
   },
   {
     templateType: "Double Picture",
     reportType: "RIM",
-    file: "DoublePictureRIM",
+    file: "PictureRIM",
   },
   {
     templateType: "Double Picture B/A",
     reportType: "RIM",
-    file: "DoublePictureBARIM",
+    file: "BeforeAfterRIM",
   },
 ];
 
 export const createReport = async (req, res) => {
-  const { reportName, templateType, reportType, details } = req.body;
+  const {
+    reportName,
+    templateType,
+    reportType,
+    details,
+    meetTo,
+    inspectionBy,
+    inspectionDate,
+  } = req.body;
   try {
-  
     if (!reportName || !templateType || !reportType)
       return res.status(400).json({ msg: "Please provide all values" });
 
@@ -49,6 +56,9 @@ export const createReport = async (req, res) => {
       template,
 
       additionalJsContext: {
+        meetTo: meetTo,
+        inspectionBy: inspectionBy,
+        inspectionDate: inspectionDate,
         data: details,
         image: async (
           url = "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg",
@@ -60,7 +70,7 @@ export const createReport = async (req, res) => {
             : await resp.buffer();
           return {
             width: 16 / len,
-            height: 12 / len,
+            height: 9,
             data: buffer,
             extension: ".jpg",
           };
@@ -72,7 +82,23 @@ export const createReport = async (req, res) => {
       path.resolve(__dirname, "../files/", `${reportName}.docx`),
       buffer
     );
-    res.status(201).json({ msg: "ok" });
+
+    const result = await cloudinary.uploader.upload(
+      `files/${reportName}.docx`,
+      {
+        resource_type: "raw",
+        use_filename: true,
+        folder: "reports",
+      }
+    );
+
+    req.body.link = result.secure_url;
+
+    const newReport = await Report.create(req.body);
+
+    res
+      .status(201)
+      .json({ msg: "Report successfully generated.", link: newReport.link });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -81,22 +107,23 @@ export const createReport = async (req, res) => {
 
 export const uploadImages = async (req, res) => {
   try {
-    let images = [];
-
-    if (req.files.image.length > 0) images = req.files.image;
-    else images.push(req.files.image);
-
-    const imageLinks = [];
-    for (let i = 0; i < images.length; i++) {
-      const result = await cloudinary.uploader.upload(images[i].tempFilePath, {
+    const result = await cloudinary.uploader.upload(
+      req.files.image.tempFilePath,
+      {
         use_filename: true,
         folder: "reports",
         quality: 30,
+      }
+    );
+    fs.unlinkSync(req.files.image.tempFilePath);
+
+    return res
+      .status(201)
+      .json({
+        msg: "ok",
+        link: result.secure_url,
+        imageCount: req.body.imageCount,
       });
-      fs.unlinkSync(images[i].tempFilePath);
-      imageLinks.push({ img: result.secure_url, len: images.length });
-    }
-    return res.status(201).json({ imageLinks });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
