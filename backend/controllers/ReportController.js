@@ -12,12 +12,12 @@ const allTemplates = [
   {
     templateType: "Single Picture",
     reportType: "RIM",
-    file: "PictureRIM",
+    file: "SInglePictureRIM",
   },
   {
-    templateType: "Double Picture",
+    templateType: "Double Pictures",
     reportType: "RIM",
-    file: "PictureRIM",
+    file: "DoublePicturesRIM",
   },
   {
     templateType: "Double Picture B/A",
@@ -33,14 +33,20 @@ export const createReport = async (req, res) => {
     reportType,
     details,
     meetTo,
+    meetContact,
+    shownTo,
+    shownContact,
     inspectionBy,
     inspectionDate,
+    meetEmail,
+    shownEmail,
   } = req.body;
   try {
     if (!reportName || !templateType || !reportType)
       return res.status(400).json({ msg: "Please provide all values" });
 
-    let file = "";
+    let file = "",
+      width = 16;
     allTemplates.forEach((x) => {
       if (x.templateType === templateType && x.reportType === reportType) {
         file = x.file;
@@ -51,25 +57,29 @@ export const createReport = async (req, res) => {
       path.resolve(__dirname, "../templates/", `${file}.docx`)
     );
 
+    if (templateType !== "Single Picture") width = 8;
+
     const buffer = await newdoc.createReport({
       cmdDelimiter: ["{", "}"],
       template,
 
       additionalJsContext: {
         meetTo: meetTo,
+        meetContact: meetContact,
+        meetEmail: meetEmail,
+        shownTo: shownTo,
+        shownContact: shownContact,
+        shownEmail: shownEmail,
         inspectionBy: inspectionBy,
         inspectionDate: inspectionDate,
         data: details,
-        image: async (
-          url = "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg",
-          len
-        ) => {
+        image: async (url) => {
           const resp = await fetch(url);
           const buffer = resp.arrayBuffer
             ? await resp.arrayBuffer()
             : await resp.buffer();
           return {
-            width: 16 / len,
+            width: width,
             height: 9,
             data: buffer,
             extension: ".jpg",
@@ -79,12 +89,12 @@ export const createReport = async (req, res) => {
     });
 
     fs.writeFileSync(
-      path.resolve(__dirname, "../files/", `${reportName}.docx`),
+      path.resolve(__dirname, "../files/", `${reportName + templateType}.docx`),
       buffer
     );
 
     const result = await cloudinary.uploader.upload(
-      `files/${reportName}.docx`,
+      `files/${reportName + templateType}.docx`,
       {
         resource_type: "raw",
         use_filename: true,
@@ -117,13 +127,11 @@ export const uploadImages = async (req, res) => {
     );
     fs.unlinkSync(req.files.image.tempFilePath);
 
-    return res
-      .status(201)
-      .json({
-        msg: "ok",
-        link: result.secure_url,
-        imageCount: req.body.imageCount,
-      });
+    return res.status(201).json({
+      msg: "ok",
+      link: result.secure_url,
+      imageCount: req.body.imageCount,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
