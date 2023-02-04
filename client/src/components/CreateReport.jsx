@@ -13,8 +13,16 @@ const initialState = {
 };
 
 const CreateReport = () => {
-  const { loading, images, reportName, details, reportType, inspectionBy } =
-    useSelector((store) => store.report);
+  const {
+    loading,
+    image1,
+    image2,
+    reportName,
+    details,
+    reportType,
+    inspectionBy,
+    templateType,
+  } = useSelector((store) => store.report);
   const [lastPage, setLastPage] = useState(false);
   const [formValue, setFormValue] = useState(initialState);
   const { pest, floor, subFloor, location, finding, suggestion } = formValue;
@@ -26,19 +34,30 @@ const CreateReport = () => {
     setFormValue({ ...formValue, [name]: value });
   };
 
-  const handleImage = (e) => {
-    const file = Array.from(e.target.files);
+  const handleImage1 = (e) => {
+    const image = e.target.files[0];
 
     const form = new FormData();
-    file.forEach((image) => {
-      form.append("image", image);
-    });
+    form.set("imageCount", "image1");
+    form.append("image", image);
+
+    dispatch(uploadImage(form));
+  };
+
+  const handleImage2 = (e) => {
+    const image = e.target.files[0];
+
+    const form = new FormData();
+    form.set("imageCount", "image2");
+    form.append("image", image);
+
     dispatch(uploadImage(form));
   };
 
   const next = () => {
     if (reportType === "RIM") formValue.pest = "Rodent";
-    formValue.image = images;
+    if (image1) formValue.image1 = image1;
+    if (image2) formValue.image2 = image2;
     dispatch(addPage({ formValue }));
     setTimeout(() => {
       setFormValue(initialState);
@@ -121,18 +140,30 @@ const CreateReport = () => {
                 handleChange={handleChange}
               />
             </div>
-            <div className="col-md-6 my-2">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImage}
-                multiple
-              />
+            <div className="col-md-6 my-2 d-flex">
+              <label>Image1:</label>
+              <input type="file" accept="image/*" onChange={handleImage1} />
             </div>
+            {templateType !== "Single Picture" && (
+              <div className="col-md-6 my-2 d-flex">
+                <label>Image2:</label>
+                <input type="file" accept="image/*" onChange={handleImage2} />
+              </div>
+            )}
+
             <div className="col-4 mt-4">
               <button
+                type="button"
                 className="btn btn-primary"
-                disabled={images.length > 0 ? false : true}
+                disabled={
+                  templateType === "Single Picture"
+                    ? image1 === null
+                      ? true
+                      : false
+                    : image2 === null
+                    ? true
+                    : false
+                }
                 onClick={next}
               >
                 Next
@@ -140,9 +171,18 @@ const CreateReport = () => {
             </div>
             <div className="col-8 mt-4 d-flex justify-content-end">
               <button
+                type="button"
                 className="btn btn-success"
-                disabled={images.length > 0 ? false : true}
                 onClick={handleLastPage}
+                disabled={
+                  templateType === "Single Picture"
+                    ? image1 === null
+                      ? true
+                      : false
+                    : image2 === null
+                    ? true
+                    : false
+                }
               >
                 Add Last Page
               </button>
@@ -151,11 +191,15 @@ const CreateReport = () => {
         ) : (
           <>
             <div className="col-md-6 my-3">
-              <h3>Report Name - {reportName}</h3>
+              <h4>Report Name - {reportName}</h4>
               <h4>Report Pages - {details.length + 2}</h4>
               <h4>Report By - {inspectionBy}</h4>
-              <button className="btn btn-success" type="submit">
-                Generate Report
+              <button
+                className="btn btn-success mt-5"
+                type="submit"
+                disabled={loading || details.length === 0 ? true : false}
+              >
+                {loading ? "Generating Report..." : "Generate Report"}
               </button>
             </div>
           </>

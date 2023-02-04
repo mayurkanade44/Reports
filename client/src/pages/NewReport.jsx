@@ -4,7 +4,7 @@ import { CreateReport, InputRow, InputSelect } from "../components";
 import { reportHandleChange } from "../redux/reportSlice";
 
 const NewReport = () => {
-  const { loading, templateType, reportType, meetTo, inspectionDate } =
+  const { templateType, reportType, meetTo, inspectionDate } =
     useSelector((store) => store.report);
   const dispatch = useDispatch();
   const [showReport, setShowReport] = useState(false);
@@ -26,7 +26,7 @@ const NewReport = () => {
   return showReport ? (
     <CreateReport />
   ) : (
-    <div className="row my-3 d-flex flex-column min-vh-100 justify-content-center align-items-center">
+    <div className="row m-2 d-flex flex-column min-vh-100 justify-content-center align-items-center">
       <div className="col-md-6">
         <InputSelect
           label="Template Type:"

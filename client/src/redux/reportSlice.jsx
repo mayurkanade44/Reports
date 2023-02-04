@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const initialState = {
   loading: false,
@@ -9,7 +10,8 @@ const initialState = {
   meetTo: "",
   inspectionDate: "",
   inspectionBy: "Mallu Yadav",
-  images: [],
+  image1: null,
+  image2: null,
   details: [],
 };
 
@@ -33,8 +35,8 @@ export const createReport = createAsyncThunk(
         meetTo,
         inspectionBy,
         inspectionDate,
-        details
-      }
+        details,
+      };
       const res = await axios.post("/report/create", form);
       return res.data;
     } catch (error) {
@@ -63,7 +65,8 @@ const reportSlice = createSlice({
   reducers: {
     addPage: (state, { payload: { formValue } }) => {
       state.details.push(formValue);
-      state.images = [];
+      state.image1 = null;
+      state.image2 = null;
     },
     reportHandleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
@@ -76,7 +79,8 @@ const reportSlice = createSlice({
       })
       .addCase(createReport.fulfilled, (state, { payload }) => {
         state.loading = false;
-        console.log(payload.msg);
+        toast.success(payload.msg, { autoClose: 1000 });
+        state.details = [];
       })
       .addCase(createReport.rejected, (state, { payload }) => {
         state.loading = false;
@@ -87,7 +91,8 @@ const reportSlice = createSlice({
       })
       .addCase(uploadImage.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.images = payload.imageLinks;
+        if (payload.imageCount === "image1") state.image1 = payload.link;
+        else if (payload.imageCount === "image2") state.image2 = payload.link;
       })
       .addCase(uploadImage.rejected, (state, { payload }) => {
         state.loading = false;
