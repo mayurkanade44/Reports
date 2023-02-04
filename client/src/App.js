@@ -1,10 +1,22 @@
-import { NewReport } from "./pages";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { Home, NewReport } from "./pages";
 
 function App() {
   return (
-    <div className="container">
-      <NewReport />
-    </div>
+    <Router className="container">
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        pauseOnFocusLoss={false}
+      />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/createReport" element={<NewReport />} />
+      </Routes>
+    </Router>
   );
 }
 
