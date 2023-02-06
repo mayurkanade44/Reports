@@ -14,7 +14,7 @@ const initialState = {
   shownContact: "",
   shownEmail: "",
   inspectionDate: "",
-  inspectionBy: "Mallu Yadav",
+  inspectionBy: "",
   image1: null,
   image2: null,
   details: [],
