@@ -5,6 +5,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
+import axios from "axios";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -12,7 +13,7 @@ const allTemplates = [
   {
     templateType: "Single Picture",
     reportType: "RIM",
-    file: "SInglePictureRIM",
+    file: "SinglePictureRIM",
   },
   {
     templateType: "Double Pictures",
@@ -74,10 +75,10 @@ export const createReport = async (req, res) => {
         inspectionDate: inspectionDate,
         data: details,
         image: async (url) => {
-          const resp = await fetch(url);
-          const buffer = resp.arrayBuffer
-            ? await resp.arrayBuffer()
-            : await resp.buffer();
+          const resp = await axios.get(url, {
+            responseType: "arraybuffer",
+          });
+          const buffer = Buffer.from(resp.data, "binary").toString("base64");
           return {
             width: width,
             height: 9,
