@@ -18,6 +18,8 @@ cloudinary.config({
   api_secret: process.env.CLOUD_SECRET,
 });
 
+import { notFoundError } from "./middleware/notFound.js";
+import { authenticateUser} from "./middleware/auth.js";
 import reportRouter from "./routes/ReportRoute.js";
 import userRouter from "./routes/UserRoute.js";
 
@@ -29,16 +31,17 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // only when ready to deploy
 // app.use(express.static(path.resolve(__dirname, "./client/build")));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+// });
 
 app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
 
 app.use("/api/user", userRouter);
-app.use("/api/report", reportRouter);
+app.use("/api/report", authenticateUser, reportRouter);
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
-// });
+app.use(notFoundError);
 
 const port = process.env.PORT || 5000;
 const start = async () => {

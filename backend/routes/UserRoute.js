@@ -7,10 +7,17 @@ import {
   loginUser,
   registerUser,
 } from "../controllers/UserController.js";
+import { authenticateUser, authorizeUser } from "../middleware/auth.js";
 
-router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
-router.route("/allUser").get(allUsers);
-router.route("/delete/:id").delete(deleteUser);
+router
+  .route("/register")
+  .post(authenticateUser, authorizeUser("Admin"), registerUser);
+router
+  .route("/allUser")
+  .get(authenticateUser, authorizeUser("Admin"), allUsers);
+router
+  .route("/delete/:id")
+  .delete(authenticateUser, authorizeUser("Admin"), deleteUser);
 
-export default router
+export default router;
