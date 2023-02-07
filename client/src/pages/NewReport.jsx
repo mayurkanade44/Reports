@@ -27,8 +27,6 @@ const NewReport = () => {
 
   const reports = ["RIM"];
 
-  const reportBy = ["Rupesh", "Mallu Yadav"];
-
   const startReport = () => {
     setTimeout(() => {
       setShowReport(true);
@@ -44,15 +42,7 @@ const NewReport = () => {
     <CreateReport />
   ) : (
     <div className="row m-2 d-flex flex-column min-vh-100 justify-content-center align-items-center">
-      <div className="col-md-6">
-        <InputSelect
-          label="Report By:"
-          name="inspectionBy"
-          value={inspectionBy}
-          data={["Select", ...reportBy]}
-          handleChange={handleChange}
-        />
-      </div>
+      
       <div className="col-md-6">
         <InputSelect
           label="Template Type:"
