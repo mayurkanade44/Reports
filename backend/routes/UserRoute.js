@@ -9,6 +9,7 @@ import {
 } from "../controllers/UserController.js";
 import { authenticateUser, authorizeUser } from "../middleware/auth.js";
 
+
 router.route("/login").post(loginUser);
 router
   .route("/register")

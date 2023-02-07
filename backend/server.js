@@ -19,7 +19,7 @@ cloudinary.config({
 });
 
 import { notFoundError } from "./middleware/notFound.js";
-import { authenticateUser} from "./middleware/auth.js";
+import { authenticateUser } from "./middleware/auth.js";
 import reportRouter from "./routes/ReportRoute.js";
 import userRouter from "./routes/UserRoute.js";
 

@@ -138,3 +138,18 @@ export const uploadImages = async (req, res) => {
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };
+
+export const allReports = async (req, res) => {
+  try {
+    let reports = await Report.find().select(
+      "reportName reportType inspectionBy inspectionDate link"
+    );
+    if (req.user.role === "Field") {
+      reports = reports.filter((item) => item.inspectionBy === req.user.name);
+    }
+    res.status(200).json({ reports });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
