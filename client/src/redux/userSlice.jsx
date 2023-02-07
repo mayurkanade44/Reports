@@ -1,0 +1,78 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { authFetch } from "./auth";
+import { toast } from "react-toastify";
+
+const initialState = {
+  userLoading: false,
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  allUsers: [],
+  email: "",
+  password: "",
+  name: "",
+  role: "",
+};
+
+export const register = createAsyncThunk(
+  "user/register",
+  async (form, thunkAPI) => {
+    try {
+      const res = await authFetch.post("/user/register", form);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const login = createAsyncThunk("user/login", async (form, thunkAPI) => {
+  try {
+    const res = await authFetch.post("/user/login", form);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return thunkAPI.rejectWithValue(error.response.data.msg);
+  }
+});
+
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    handleUserChange: (state, { payload: { name, value } }) => {
+      state[name] = value;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(register.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(register.fulfilled, (state, { payload }) => {
+        state.userLoading = false;
+        state.allUsers = payload.users;
+        toast.success(payload.msg);
+      })
+      .addCase(register.rejected, (state, { payload }) => {
+        state.userLoading = false;
+        toast.error(payload);
+      })
+      .addCase(login.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(login.fulfilled, (state, { payload }) => {
+        state.userLoading = false;
+        state.user = payload.user;
+        localStorage.setItem("user", JSON.stringify(payload.user));
+        toast.success(payload.msg);
+      })
+      .addCase(login.rejected, (state, { payload }) => {
+        state.userLoading = false;
+        toast.error(payload);
+      });
+  },
+});
+
+export const { handleUserChange } = userSlice.actions;
+
+export default userSlice.reducer;
