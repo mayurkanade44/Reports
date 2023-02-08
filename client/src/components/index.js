@@ -1,7 +1,18 @@
 import CreateReport from "./CreateReport";
 import InputRow from "./InputRow";
 import InputSelect from "./InputSelect";
+import Loading from "./Loading";
 import ProtectedRoute from "./ProtectedRoute";
+import SearchContainer from "./SearchContainer";
 import Table from "./Table";
 
-export { InputRow, CreateReport, InputSelect, ProtectedRoute, Table };
+
+export {
+  InputRow,
+  CreateReport,
+  InputSelect,
+  ProtectedRoute,
+  Table,
+  Loading,
+  SearchContainer,
+};

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { authFetch } from "./auth";
 
 const initialState = {
-  loading: false,
+  reportLoading: false,
   reportName: "RIM",
   templateType: "",
   reportType: "",
@@ -19,6 +19,7 @@ const initialState = {
   image2: null,
   details: [],
   reports: [],
+  search:""
 };
 
 export const createReport = createAsyncThunk(
@@ -77,9 +78,11 @@ export const uploadImage = createAsyncThunk(
 
 export const allReports = createAsyncThunk(
   "report/all",
-  async (_, thunkAPI) => {
+  async (search, thunkAPI) => {
     try {
-      const res = await authFetch.get("/report/allReports");
+      let url = "/report/allReports"
+      if(search) url += `?search=${search}`
+      const res = await authFetch.get(url);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -104,38 +107,38 @@ const reportSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createReport.pending, (state) => {
-        state.loading = true;
+        state.reportLoading = true;
       })
       .addCase(createReport.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.reportLoading = false;
         toast.success(payload.msg, { autoClose: 1000 });
         state.details = [];
       })
       .addCase(createReport.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.reportLoading = false;
         console.log(payload);
       })
       .addCase(uploadImage.pending, (state) => {
-        state.loading = true;
+        state.reportLoading = true;
       })
       .addCase(uploadImage.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.reportLoading = false;
         if (payload.imageCount === "image1") state.image1 = payload.link;
         else if (payload.imageCount === "image2") state.image2 = payload.link;
       })
       .addCase(uploadImage.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.reportLoading = false;
         console.log(payload);
       })
       .addCase(allReports.pending, (state) => {
-        state.loading = true;
+        state.reportLoading = true;
       })
       .addCase(allReports.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.reportLoading = false;
         state.reports = payload.reports;
       })
       .addCase(allReports.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.reportLoading = false;
         console.log(payload);
       });
   },

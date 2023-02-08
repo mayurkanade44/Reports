@@ -8,8 +8,12 @@ export const authenticateUser = async (req, res, next) => {
 
     const token = authHeaders.split(" ")[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { userId: payload.userId, role: payload.role };
-    next()
+    req.user = {
+      userId: payload.userId,
+      role: payload.role,
+      name: payload.name,
+    };
+    next();
   } catch (error) {
     return res.status(401).json({ msg: "Authentication Invalid" });
   }

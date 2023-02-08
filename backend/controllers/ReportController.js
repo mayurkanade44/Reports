@@ -140,13 +140,18 @@ export const uploadImages = async (req, res) => {
 };
 
 export const allReports = async (req, res) => {
+  const { search } = req.query;
+  const searchObject = {};
   try {
-    let reports = await Report.find()
+    if (search) searchObject.reportName = { $regex: search, $options: "i" };
+
+    let reports = await Report.find(searchObject)
       .sort("-createdAt")
       .select("reportName reportType inspectionBy inspectionDate link");
     if (req.user.role === "Field") {
       reports = reports.filter((item) => item.inspectionBy === req.user.name);
     }
+
     res.status(200).json({ reports });
   } catch (error) {
     console.log(error);
