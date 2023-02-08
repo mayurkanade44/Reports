@@ -141,9 +141,9 @@ export const uploadImages = async (req, res) => {
 
 export const allReports = async (req, res) => {
   try {
-    let reports = await Report.find().select(
-      "reportName reportType inspectionBy inspectionDate link"
-    );
+    let reports = await Report.find()
+      .sort("-createdAt")
+      .select("reportName reportType inspectionBy inspectionDate link");
     if (req.user.role === "Field") {
       reports = reports.filter((item) => item.inspectionBy === req.user.name);
     }

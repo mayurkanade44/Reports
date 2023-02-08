@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Table, InputRow, InputSelect } from "../components";
+import { allReports } from "../redux/reportSlice";
 import {
   getAllUsers,
   handleUserChange,
@@ -12,10 +13,14 @@ const Dashboard = () => {
   const { userLoading, allUsers, name, email, password, role } = useSelector(
     (store) => store.user
   );
+  const { reports } = useSelector((store) => store.report);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllUsers());
+    dispatch(allReports());
+
+    // eslint-disable-next-line
   }, []);
 
   const handleDelete = (id) => {
@@ -31,6 +36,9 @@ const Dashboard = () => {
     <div className="container my-2">
       <div className="row">
         <div className="col-2">
+          <button className="btn btn-primary">All Reports</button>
+        </div>
+        <div className="col-2">
           <button className="btn btn-primary">All Users</button>
         </div>
         <div className="col-2">
@@ -38,11 +46,21 @@ const Dashboard = () => {
         </div>
         <div className="col-12">
           <Table
-            user="User"
+            user="Admin"
             th1="Name"
             th2="Role"
             th3="Delete"
             data={allUsers}
+            deleteUser={handleDelete}
+          />
+        </div>
+        <div className="col-12">
+          <Table
+            th1="Report Name"
+            th2="Report By"
+            th3="Inspection Date"
+            th4="Download"
+            data={reports}
             deleteUser={handleDelete}
           />
         </div>

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { authFetch } from "./auth";
 
 const initialState = {
   loading: false,
@@ -18,6 +18,7 @@ const initialState = {
   image1: null,
   image2: null,
   details: [],
+  reports: [],
 };
 
 export const createReport = createAsyncThunk(
@@ -52,7 +53,7 @@ export const createReport = createAsyncThunk(
         inspectionDate,
         details,
       };
-      const res = await axios.post("/report/create", form);
+      const res = await authFetch.post("/report/create", form);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -65,7 +66,20 @@ export const uploadImage = createAsyncThunk(
   "report/imgUpload",
   async (form, thunkAPI) => {
     try {
-      const res = await axios.post("/report/uploadImage", form);
+      const res = await authFetch.post("/report/uploadImage", form);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const allReports = createAsyncThunk(
+  "report/all",
+  async (_, thunkAPI) => {
+    try {
+      const res = await authFetch.get("/report/allReports");
       return res.data;
     } catch (error) {
       console.log(error);
@@ -110,6 +124,17 @@ const reportSlice = createSlice({
         else if (payload.imageCount === "image2") state.image2 = payload.link;
       })
       .addCase(uploadImage.rejected, (state, { payload }) => {
+        state.loading = false;
+        console.log(payload);
+      })
+      .addCase(allReports.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(allReports.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.reports = payload.reports;
+      })
+      .addCase(allReports.rejected, (state, { payload }) => {
         state.loading = false;
         console.log(payload);
       });
