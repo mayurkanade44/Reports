@@ -147,12 +147,36 @@ export const allReports = async (req, res) => {
 
     let reports = await Report.find(searchObject)
       .sort("-createdAt")
-      .select("reportName reportType inspectionBy inspectionDate link");
+      .select(
+        "reportName reportType inspectionBy inspectionDate link approved email"
+      );
     if (req.user.role === "Field") {
       reports = reports.filter((item) => item.inspectionBy === req.user.name);
     }
 
-    res.status(200).json({ reports });
+    const approved = reports.filter((item) => item.approved === true).length;
+    const email = reports.filter((item) => item.email === true).length;
+
+    return res.status(200).json({ reports, approved, email });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const verifyReport = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const _id = id.split("-")[0];
+    const verify = id.split("-")[1];
+    const report = await Report.findById({ _id });
+    console.log(report);
+    if (verify === "Approve") report.approved = true;
+    if (verify === "Send Email") report.email = true;
+
+    await report.save();
+
+    res.status(200).json({ msg: "ok" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

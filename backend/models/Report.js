@@ -15,6 +15,8 @@ const ReportSchema = new mongoose.Schema(
     inspectionDate: { type: String, required: true },
     details: [],
     link: { type: String },
+    approved: { type: Boolean, default: false },
+    email: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
