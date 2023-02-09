@@ -1,4 +1,4 @@
-const Table = ({ user, th1, th2, th3, th4, data, deleteUser }) => {
+const Table = ({ user, th1, th2, th3, th4, data, handleButton }) => {
   return (
     <table className="table table-striped-columns table-bordered mt-2">
       <thead>
@@ -19,7 +19,7 @@ const Table = ({ user, th1, th2, th3, th4, data, deleteUser }) => {
                   {item.role !== "Admin" && (
                     <button
                       className="btn btn-danger"
-                      onClick={() => deleteUser(item._id)}
+                      onClick={() => handleButton(item._id)}
                     >
                       Remove User
                     </button>
@@ -33,7 +33,7 @@ const Table = ({ user, th1, th2, th3, th4, data, deleteUser }) => {
                 <td>{item.inspectionBy}</td>
                 <td>{item.inspectionDate}</td>
                 <td>
-                  <button className="btn btn-success">
+                  <button className="btn btn-primary btn-sm me-2">
                     <a
                       href={item.link}
                       style={{ textDecoration: "none", color: "whitesmoke" }}
@@ -41,6 +41,25 @@ const Table = ({ user, th1, th2, th3, th4, data, deleteUser }) => {
                       Download
                     </a>
                   </button>
+                  {item.approved ? (
+                    <button
+                      className="btn btn-info btn-sm"
+                      onClick={(e) =>
+                        handleButton(item._id + "-" + e.target.textContent)
+                      }
+                    >
+                      Send Email
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={(e) =>
+                        handleButton(item._id + "-" + e.target.textContent)
+                      }
+                    >
+                      Approve
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

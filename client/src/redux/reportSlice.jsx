@@ -19,7 +19,9 @@ const initialState = {
   image2: null,
   details: [],
   reports: [],
-  search:""
+  search: "",
+  approved: 0,
+  emailSent: 0,
 };
 
 export const createReport = createAsyncThunk(
@@ -80,9 +82,23 @@ export const allReports = createAsyncThunk(
   "report/all",
   async (search, thunkAPI) => {
     try {
-      let url = "/report/allReports"
-      if(search) url += `?search=${search}`
+      let url = "/report/allReports";
+      if (search) url += `?search=${search}`;
       const res = await authFetch.get(url);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const verifyReport = createAsyncThunk(
+  "report/verify",
+  async (id, thunkAPI) => {
+    try {
+      const res = await authFetch.patch(`/report/verifyReport/${id}`);
+      thunkAPI.dispatch(allReports(thunkAPI.getState().report.search));
       return res.data;
     } catch (error) {
       console.log(error);
@@ -136,8 +152,21 @@ const reportSlice = createSlice({
       .addCase(allReports.fulfilled, (state, { payload }) => {
         state.reportLoading = false;
         state.reports = payload.reports;
+        state.approved = payload.approved;
+        state.emailSent = payload.email;
       })
       .addCase(allReports.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        console.log(payload);
+      })
+      .addCase(verifyReport.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(verifyReport.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.success(payload.msg);
+      })
+      .addCase(verifyReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         console.log(payload);
       });

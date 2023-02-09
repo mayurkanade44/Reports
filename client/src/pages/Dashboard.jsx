@@ -6,8 +6,13 @@ import {
   InputSelect,
   Loading,
   SearchContainer,
+  ReportStats,
 } from "../components";
-import { allReports, reportHandleChange } from "../redux/reportSlice";
+import {
+  allReports,
+  reportHandleChange,
+  verifyReport,
+} from "../redux/reportSlice";
 import {
   getAllUsers,
   handleUserChange,
@@ -19,7 +24,9 @@ const Dashboard = () => {
   const { userLoading, allUsers, name, email, password, role } = useSelector(
     (store) => store.user
   );
-  const { reports, reportLoading, search } = useSelector((store) => store.report);
+  const { reports, reportLoading, search, approved, emailSent } = useSelector(
+    (store) => store.report
+  );
   const dispatch = useDispatch();
   const [show, setShow] = useState("All Reports");
 
@@ -29,6 +36,18 @@ const Dashboard = () => {
 
     // eslint-disable-next-line
   }, []);
+
+  const stats = [
+    { bg: "secondary", count: reports.length, text: "Number Of Reports" },
+    {
+      bg: "danger",
+      count: reports.length - approved,
+      text: "Pending For Approval",
+    },
+    { bg: "success", count: approved, text: "Reports Approved" },
+
+    { bg: "danger", count: reports.length - emailSent, text: "Email Not Sent" },
+  ];
 
   const handleDelete = (id) => {
     dispatch(userDelete(id));
@@ -40,9 +59,13 @@ const Dashboard = () => {
   };
 
   const handleSearch = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     dispatch(allReports(search));
-  }
+  };
+
+  const handleVerify = (id) => {
+    dispatch(verifyReport(id));
+  };
 
   if (reportLoading || userLoading) return <Loading />;
 
@@ -89,6 +112,7 @@ const Dashboard = () => {
             }
           />
         </div>
+        <ReportStats data={stats} />
         {show === "All Users" && (
           <div className="col-12">
             <Table
@@ -97,7 +121,7 @@ const Dashboard = () => {
               th2="Role"
               th3="Delete"
               data={allUsers}
-              deleteUser={handleDelete}
+              handleButton={handleDelete}
             />
           </div>
         )}
@@ -109,7 +133,7 @@ const Dashboard = () => {
               th3="Inspection Date"
               th4="Download"
               data={reports}
-              deleteUser={handleDelete}
+              handleButton={handleVerify}
             />
           </div>
         )}
