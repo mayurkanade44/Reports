@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { InputRow, InputSelect } from ".";
+import { InputRow, InputSelect, Loading } from ".";
 import { useDispatch, useSelector } from "react-redux";
 import { addPage, createReport, uploadImage } from "../redux/reportSlice";
-import { getAdminValues } from "../redux/adminSlice";
+import { addAdminValues, getAdminValues } from "../redux/adminSlice";
 
 const initialState = {
   pest: "",
@@ -15,7 +15,7 @@ const initialState = {
 
 const CreateReport = () => {
   const {
-    loading,
+    reportLoading,
     image1,
     image2,
     reportName,
@@ -24,9 +24,12 @@ const CreateReport = () => {
     inspectionBy,
     templateType,
   } = useSelector((store) => store.report);
-  const { findings, suggestions } = useSelector((store) => store.admin);
+  const { adminLoading, findings, suggestions } = useSelector(
+    (store) => store.admin
+  );
   const [lastPage, setLastPage] = useState(false);
   const [formValue, setFormValue] = useState(initialState);
+  const [other, setOther] = useState({ find: "", suggest: "" });
   const { pest, floor, subFloor, location, finding, suggestion } = formValue;
 
   const dispatch = useDispatch();
@@ -35,6 +38,12 @@ const CreateReport = () => {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
   };
+
+  useEffect(() => {
+    dispatch(getAdminValues());
+
+    // eslint-disable-next-line
+  }, []);
 
   const handleImage1 = (e) => {
     const image = e.target.files[0];
@@ -45,10 +54,6 @@ const CreateReport = () => {
 
     dispatch(uploadImage(form));
   };
-
-  useEffect(() => {
-    dispatch(getAdminValues());
-  }, []);
 
   const handleImage2 = (e) => {
     const image = e.target.files[0];
@@ -64,6 +69,14 @@ const CreateReport = () => {
     if (reportType === "RIM") formValue.pest = "Rodent";
     if (image1) formValue.image1 = image1;
     if (image2) formValue.image2 = image2;
+    if (finding === "Other") {
+      formValue.finding = other.find;
+      dispatch(addAdminValues({ finding: other.find }));
+    }
+    if (suggestion === "Other") {
+      formValue.suggestion = other.suggest;
+      dispatch(addAdminValues({ suggestion: other.suggest }));
+    }
     dispatch(addPage({ formValue }));
     setTimeout(() => {
       setFormValue(initialState);
@@ -82,6 +95,7 @@ const CreateReport = () => {
     }, 1000);
   };
 
+  if (adminLoading) return <Loading />;
   return (
     <form onSubmit={handleSubmit}>
       <div className="container row my-3">
@@ -129,36 +143,46 @@ const CreateReport = () => {
               />
             </div>
             <div className="col-md-6">
-              <InputSelect
-                label="Findings:"
-                name="finding"
-                value={finding}
-                data={["Select", ...findings]}
-                handleChange={handleChange}
-              />
-              {/* <InputRow
-                label="Finding"
-                type="text"
-                name="finding"
-                value={finding}
-                handleChange={handleChange}
-              /> */}
+              {finding !== "Other" ? (
+                <InputSelect
+                  label="Findings:"
+                  name="finding"
+                  value={finding}
+                  data={["Select", ...findings, "Other"]}
+                  handleChange={handleChange}
+                />
+              ) : (
+                <InputRow
+                  label="Finding"
+                  type="text"
+                  name="otherFinding"
+                  value={other.find}
+                  handleChange={(e) =>
+                    setOther({ ...other, find: e.target.value })
+                  }
+                />
+              )}
             </div>
             <div className="col-md-6">
-              <InputSelect
-                label="Suggestions:"
-                name="suggestion"
-                value={suggestion}
-                data={["Select", ...suggestions]}
-                handleChange={handleChange}
-              />
-              {/* <InputRow
-                label="Suggestions"
-                type="text"
-                name="suggestion"
-                value={suggestion}
-                handleChange={handleChange}
-              /> */}
+              {suggestion !== "Other" ? (
+                <InputSelect
+                  label="Suggestions:"
+                  name="suggestion"
+                  value={suggestion}
+                  data={["Select", ...suggestions, "Other"]}
+                  handleChange={handleChange}
+                />
+              ) : (
+                <InputRow
+                  label="Suggestions"
+                  type="text"
+                  name="otherFinding"
+                  value={other.suggest}
+                  handleChange={(e) =>
+                    setOther({ ...other, suggest: e.target.value })
+                  }
+                />
+              )}
             </div>
             <div className="col-md-6 mt-3 mb-2 d-flex">
               <h4 className="img me-1">Image1:</h4>
@@ -219,9 +243,9 @@ const CreateReport = () => {
               <button
                 className="btn btn-success mt"
                 type="submit"
-                disabled={loading || details.length === 0 ? true : false}
+                disabled={reportLoading || details.length === 0 ? true : false}
               >
-                {loading ? "Generating Report..." : "Generate Report"}
+                {reportLoading ? "Generating Report..." : "Generate Report"}
               </button>
             </div>
           </>

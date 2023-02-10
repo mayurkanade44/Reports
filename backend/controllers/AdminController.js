@@ -1,8 +1,10 @@
 import Admin from "../models/Admin.js";
 
 export const addValues = async (req, res) => {
+  const { finding, suggestion } = req.body;
   try {
-    const values = await Admin.create(req.body);
+    if (finding) await Admin.create({ finding });
+    if (suggestion) await Admin.create({ suggestion });
     res.status(201).json({ msg: "created" });
   } catch (error) {
     console.log(error);

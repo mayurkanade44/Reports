@@ -37,7 +37,6 @@ export const createReport = async (req, res) => {
     meetContact,
     shownTo,
     shownContact,
-    inspectionBy,
     inspectionDate,
     meetEmail,
     shownEmail,
@@ -71,7 +70,7 @@ export const createReport = async (req, res) => {
         shownTo: shownTo,
         shownContact: shownContact,
         shownEmail: shownEmail,
-        inspectionBy: inspectionBy,
+        inspectionBy: req.user.name,
         inspectionDate: inspectionDate,
         data: details,
         image: async (url) => {
@@ -104,6 +103,7 @@ export const createReport = async (req, res) => {
     );
 
     req.body.link = result.secure_url;
+    req.body.inspectionBy = req.user.name;
 
     const newReport = await Report.create(req.body);
 
@@ -173,6 +173,7 @@ export const verifyReport = async (req, res) => {
     console.log(report);
     if (verify === "Approve") report.approved = true;
     if (verify === "Send Email") report.email = true;
+    //send mail function
 
     await report.save();
 

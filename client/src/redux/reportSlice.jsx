@@ -14,7 +14,6 @@ const initialState = {
   shownContact: "",
   shownEmail: "",
   inspectionDate: "",
-  inspectionBy: "",
   image1: null,
   image2: null,
   details: [],
@@ -38,7 +37,6 @@ export const createReport = createAsyncThunk(
         shownTo,
         shownContact,
         shownEmail,
-        inspectionBy,
         inspectionDate,
         details,
       } = thunkAPI.getState().report;
@@ -52,7 +50,6 @@ export const createReport = createAsyncThunk(
         shownTo,
         shownContact,
         shownEmail,
-        inspectionBy,
         inspectionDate,
         details,
       };

@@ -14,7 +14,6 @@ const NewReport = () => {
     shownContact,
     shownEmail,
     inspectionDate,
-    inspectionBy,
   } = useSelector((store) => store.report);
   const dispatch = useDispatch();
   const [showReport, setShowReport] = useState(false);
@@ -42,7 +41,6 @@ const NewReport = () => {
     <CreateReport />
   ) : (
     <div className="row m-2 d-flex flex-column min-vh-100 justify-content-center align-items-center">
-      
       <div className="col-md-6">
         <InputSelect
           label="Template Type:"
@@ -129,7 +127,6 @@ const NewReport = () => {
           className="btn btn-primary"
           onClick={startReport}
           disabled={
-            !inspectionBy ||
             !templateType ||
             !reportType ||
             !meetTo ||

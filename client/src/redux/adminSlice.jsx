@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authFetch } from "./auth";
 
 const initialState = {
+  adminLoading: false,
   findings: [],
   suggestions: [],
 };
@@ -19,6 +20,20 @@ export const getAdminValues = createAsyncThunk(
   }
 );
 
+export const addAdminValues = createAsyncThunk(
+  "admin/addValues",
+  async (value, thunkAPI) => {
+    try {
+      const res = await authFetch.post("/admin/values", value);
+      thunkAPI.dispatch(getAdminValues());
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState,
@@ -26,12 +41,21 @@ const adminSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getAdminValues.pending, (state) => {
-        state.reportLoading = true;
+        state.adminLoading = true;
       })
       .addCase(getAdminValues.fulfilled, (state, { payload }) => {
-        state.reportLoading = false;
+        state.adminLoading = false;
         state.findings = payload.findings;
         state.suggestions = payload.suggestions;
+      })
+      .addCase(addAdminValues.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(addAdminValues.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+      })
+      .addCase(addAdminValues.rejected, (state) => {
+        state.adminLoading = false;
       });
   },
 });
