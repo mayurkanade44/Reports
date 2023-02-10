@@ -22,6 +22,7 @@ import { notFoundError } from "./middleware/notFound.js";
 import { authenticateUser } from "./middleware/auth.js";
 import reportRouter from "./routes/ReportRoute.js";
 import userRouter from "./routes/UserRoute.js";
+import adminRouter from "./routes/AdminRoute.js";
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -40,6 +41,7 @@ app.use(fileUpload({ useTempFiles: true }));
 
 app.use("/api/user", userRouter);
 app.use("/api/report", authenticateUser, reportRouter);
+app.use("/api/admin", authenticateUser, adminRouter);
 
 app.use(notFoundError);
 
