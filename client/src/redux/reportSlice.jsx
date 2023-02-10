@@ -4,6 +4,7 @@ import { authFetch } from "./auth";
 
 const initialState = {
   reportLoading: false,
+  contract: null,
   reportName: "RIM",
   templateType: "",
   reportType: "",
@@ -40,6 +41,7 @@ export const createReport = createAsyncThunk(
         inspectionDate,
         details,
       } = thunkAPI.getState().report;
+      
       const form = {
         reportName,
         templateType,
@@ -96,6 +98,19 @@ export const verifyReport = createAsyncThunk(
     try {
       const res = await authFetch.patch(`/report/verifyReport/${id}`);
       thunkAPI.dispatch(allReports(thunkAPI.getState().report.search));
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const contractDetails = createAsyncThunk(
+  "report/contractDetails",
+  async (search, thunkAPI) => {
+    try {
+      const res = await authFetch.get(`/contractDetails?search=${search}`);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -166,6 +181,18 @@ const reportSlice = createSlice({
       .addCase(verifyReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         console.log(payload);
+      })
+      .addCase(contractDetails.pending, (state) => {
+        state.reportLoading = true;
+        state.contract = null;
+      })
+      .addCase(contractDetails.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        state.contract = payload.details;
+      })
+      .addCase(contractDetails.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload);
       });
   },
 });

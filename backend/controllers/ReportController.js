@@ -105,6 +105,8 @@ export const createReport = async (req, res) => {
     req.body.link = result.secure_url;
     req.body.inspectionBy = req.user.name;
 
+    fs.unlinkSync(`./files/${reportName + templateType}.docx`);
+
     const newReport = await Report.create(req.body);
 
     res
