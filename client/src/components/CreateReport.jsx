@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InputRow, InputSelect } from ".";
 import { useDispatch, useSelector } from "react-redux";
 import { addPage, createReport, uploadImage } from "../redux/reportSlice";
+import { getAdminValues } from "../redux/adminSlice";
 
 const initialState = {
   pest: "",
@@ -23,6 +24,7 @@ const CreateReport = () => {
     inspectionBy,
     templateType,
   } = useSelector((store) => store.report);
+  const { findings, suggestions } = useSelector((store) => store.admin);
   const [lastPage, setLastPage] = useState(false);
   const [formValue, setFormValue] = useState(initialState);
   const { pest, floor, subFloor, location, finding, suggestion } = formValue;
@@ -44,6 +46,10 @@ const CreateReport = () => {
     dispatch(uploadImage(form));
   };
 
+  useEffect(() => {
+    dispatch(getAdminValues());
+  }, []);
+
   const handleImage2 = (e) => {
     const image = e.target.files[0];
 
@@ -53,9 +59,6 @@ const CreateReport = () => {
 
     dispatch(uploadImage(form));
   };
-
-  const findings = ["Cracks", "Holes"];
-  const suggestions = ["Seal cracks", "Seal holes"];
 
   const next = () => {
     if (reportType === "RIM") formValue.pest = "Rodent";
