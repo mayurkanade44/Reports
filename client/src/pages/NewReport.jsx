@@ -10,7 +10,6 @@ import { contractDetails, reportHandleChange } from "../redux/reportSlice";
 
 const NewReport = () => {
   const {
-    reportName,
     templateType,
     reportType,
     meetTo,
@@ -36,7 +35,12 @@ const NewReport = () => {
   const reports = ["RIM"];
 
   const startReport = () => {
-    
+    const name = "reportName";
+    const value = `${contract.number.replace(
+      /\//g,
+      "-"
+    )} ${reportType} ${templateType}`;
+    dispatch(reportHandleChange({ name, value }));
     setTimeout(() => {
       setShowReport(true);
     }, 500);

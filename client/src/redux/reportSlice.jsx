@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { authFetch } from "./auth";
 
 const initialState = {
   reportLoading: false,
   contract: null,
-  reportName: "RIM",
+  reportName: "",
   templateType: "",
   reportType: "",
   meetTo: "",
@@ -40,8 +41,9 @@ export const createReport = createAsyncThunk(
         shownEmail,
         inspectionDate,
         details,
+        contract,
       } = thunkAPI.getState().report;
-      
+
       const form = {
         reportName,
         templateType,
@@ -54,6 +56,7 @@ export const createReport = createAsyncThunk(
         shownEmail,
         inspectionDate,
         details,
+        contract,
       };
       const res = await authFetch.post("/report/create", form);
       return res.data;
@@ -110,7 +113,9 @@ export const contractDetails = createAsyncThunk(
   "report/contractDetails",
   async (search, thunkAPI) => {
     try {
-      const res = await authFetch.get(`/contractDetails?search=${search}`);
+      const res = await axios.get(
+        `${process.env.REACT_APP_CQR}/api/contractDetails?search=${search}`
+      );
       return res.data;
     } catch (error) {
       console.log(error);
