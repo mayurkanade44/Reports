@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InputRow, InputSelect, Loading } from ".";
 import { useDispatch, useSelector } from "react-redux";
 import { addPage, createReport, uploadImage } from "../redux/reportSlice";
@@ -31,6 +31,7 @@ const CreateReport = () => {
   const [formValue, setFormValue] = useState(initialState);
   const [other, setOther] = useState({ find: "", suggest: "" });
   const { pest, floor, subFloor, location, finding, suggestion } = formValue;
+  const ref = useRef();
 
   const dispatch = useDispatch();
 
@@ -80,6 +81,7 @@ const CreateReport = () => {
     dispatch(addPage({ formValue }));
     setTimeout(() => {
       setFormValue(initialState);
+      ref.current.value = "";
     }, 1000);
   };
 
@@ -186,12 +188,22 @@ const CreateReport = () => {
             </div>
             <div className="col-md-6 mt-3 mb-2 d-flex">
               <h4 className="img me-1">Image1:</h4>
-              <input type="file" accept="image/*" onChange={handleImage1} />
+              <input
+                type="file"
+                accept="image/*"
+                ref={ref}
+                onChange={handleImage1}
+              />
             </div>
             {templateType !== "Single Picture" && (
               <div className="col-md-6 my-2 d-flex">
                 <h4 className="img me-1">Image2:</h4>
-                <input type="file" accept="image/*" onChange={handleImage2} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={ref}
+                  onChange={handleImage2}
+                />
               </div>
             )}
 

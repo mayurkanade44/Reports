@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Table,
@@ -28,8 +28,9 @@ const Dashboard = () => {
   const { reports, reportLoading, search, approved, emailSent } = useSelector(
     (store) => store.report
   );
+  const ref = useRef();
   const dispatch = useDispatch();
-  const [show, setShow] = useState("Add Template");
+  const [show, setShow] = useState("All Reports");
   const [form, setForm] = useState({
     template: "",
     report: "",
@@ -83,6 +84,10 @@ const Dashboard = () => {
     form1.append("file", form.doc);
 
     dispatch(addAdminValues(form1));
+    setTimeout(() => {
+      ref.current.value = "";
+      setForm({ template: "", report: "", doc: "" });
+    }, 500);
   };
 
   if (reportLoading || userLoading) return <Loading />;
@@ -266,11 +271,17 @@ const Dashboard = () => {
             <div className="col-2">
               <input
                 type="file"
+                ref={ref}
                 onChange={(e) => setForm({ ...form, doc: e.target.files[0] })}
               />
             </div>
             <div className="col-2" style={{ marginTop: 22 }}>
-              <button className=" btn btn-primary">Add</button>
+              <button
+                className=" btn btn-primary"
+                disabled={form.doc ? false : true}
+              >
+                Add
+              </button>
             </div>
           </form>
         )}

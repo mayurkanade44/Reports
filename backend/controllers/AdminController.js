@@ -29,7 +29,7 @@ export const addValues = async (req, res) => {
       };
       await Admin.create({ template });
     }
-    res.status(201).json({ msg: "created" });
+    res.status(201).json({ msg: "File/Comment Added Successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

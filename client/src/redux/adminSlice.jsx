@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { authFetch } from "./auth";
 
 const initialState = {
@@ -53,6 +54,7 @@ const adminSlice = createSlice({
       })
       .addCase(addAdminValues.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
+        toast.success(payload.msg);
       })
       .addCase(addAdminValues.rejected, (state) => {
         state.adminLoading = false;
