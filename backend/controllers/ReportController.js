@@ -40,6 +40,7 @@ export const createReport = async (req, res) => {
     inspectionDate,
     meetEmail,
     shownEmail,
+    contract,
   } = req.body;
   try {
     if (!reportName || !templateType || !reportType)
@@ -72,6 +73,7 @@ export const createReport = async (req, res) => {
         shownEmail: shownEmail,
         inspectionBy: req.user.name,
         inspectionDate: inspectionDate,
+        contract: contract,
         data: details,
         image: async (url) => {
           const resp = await axios.get(url, {
@@ -89,12 +91,12 @@ export const createReport = async (req, res) => {
     });
 
     fs.writeFileSync(
-      path.resolve(__dirname, "../files/", `${reportName + templateType}.docx`),
+      path.resolve(__dirname, "../files/", `${reportName}.docx`),
       buffer
     );
 
     const result = await cloudinary.uploader.upload(
-      `files/${reportName + templateType}.docx`,
+      `files/${reportName}.docx`,
       {
         resource_type: "raw",
         use_filename: true,
@@ -105,7 +107,7 @@ export const createReport = async (req, res) => {
     req.body.link = result.secure_url;
     req.body.inspectionBy = req.user.name;
 
-    fs.unlinkSync(`./files/${reportName + templateType}.docx`);
+    fs.unlinkSync(`./files/${reportName}.docx`);
 
     const newReport = await Report.create(req.body);
 
@@ -172,7 +174,6 @@ export const verifyReport = async (req, res) => {
     const _id = id.split("-")[0];
     const verify = id.split("-")[1];
     const report = await Report.findById({ _id });
-    console.log(report);
     if (verify === "Approve") report.approved = true;
     if (verify === "Send Email") report.email = true;
     //send mail function

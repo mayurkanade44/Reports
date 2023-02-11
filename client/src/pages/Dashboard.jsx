@@ -8,6 +8,7 @@ import {
   SearchContainer,
   ReportStats,
 } from "../components";
+import { addAdminValues } from "../redux/adminSlice";
 import {
   allReports,
   reportHandleChange,
@@ -28,7 +29,12 @@ const Dashboard = () => {
     (store) => store.report
   );
   const dispatch = useDispatch();
-  const [show, setShow] = useState("All Reports");
+  const [show, setShow] = useState("Add Template");
+  const [form, setForm] = useState({
+    template: "",
+    report: "",
+    doc: "",
+  });
 
   useEffect(() => {
     dispatch(getAllUsers());
@@ -67,6 +73,18 @@ const Dashboard = () => {
     dispatch(verifyReport(id));
   };
 
+  const addTemplate = (e) => {
+    e.preventDefault();
+
+    const form1 = new FormData();
+
+    form1.set("templateType", form.template);
+    form1.set("reportType", form.report);
+    form1.append("file", form.doc);
+
+    dispatch(addAdminValues(form1));
+  };
+
   if (reportLoading || userLoading) return <Loading />;
 
   return (
@@ -94,6 +112,14 @@ const Dashboard = () => {
             onClick={(e) => setShow(e.target.textContent)}
           >
             Register User
+          </button>
+        </div>
+        <div className="col-2">
+          <button
+            className="btn btn-primary"
+            onClick={(e) => setShow(e.target.textContent)}
+          >
+            Add Template
           </button>
         </div>
         <div className="col-4">
@@ -170,7 +196,6 @@ const Dashboard = () => {
                 }
               />
             </div>
-
             <div className="col-4">
               <InputRow
                 label="User Email"
@@ -207,6 +232,45 @@ const Dashboard = () => {
               <button type="submit" className="btn btn-primary">
                 Register
               </button>
+            </div>
+          </form>
+        )}
+        {show === "Add Template" && (
+          <form onSubmit={addTemplate}>
+            <div className="col-4 my-3">
+              <InputSelect
+                label="Template:"
+                value={form.template}
+                data={[
+                  "Select",
+                  "Single Picture",
+                  "Double Picture",
+                  "Before/After Picture",
+                ]}
+                handleChange={(e) =>
+                  setForm({ ...form, template: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-4 my-3">
+              <InputRow
+                label="Report Type"
+                type="text"
+                value={form.report}
+                placeholder="Report Name"
+                handleChange={(e) =>
+                  setForm({ ...form, report: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-2">
+              <input
+                type="file"
+                onChange={(e) => setForm({ ...form, doc: e.target.files[0] })}
+              />
+            </div>
+            <div className="col-2" style={{ marginTop: 22 }}>
+              <button className=" btn btn-primary">Add</button>
             </div>
           </form>
         )}
