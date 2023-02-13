@@ -40,11 +40,7 @@ const CreateReport = () => {
     setFormValue({ ...formValue, [name]: value });
   };
 
-  useEffect(() => {
-    dispatch(getAdminValues());
-
-    // eslint-disable-next-line
-  }, []);
+ 
 
   const handleImage1 = (e) => {
     const image = e.target.files[0];

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CreateReport,
@@ -6,6 +6,7 @@ import {
   InputSelect,
   SearchContainer,
 } from "../components";
+import { getAdminValues } from "../redux/adminSlice";
 import { contractDetails, reportHandleChange } from "../redux/reportSlice";
 
 const NewReport = () => {
@@ -22,17 +23,27 @@ const NewReport = () => {
     search,
     contract,
   } = useSelector((store) => store.report);
+  const { templates } = useSelector((store) => store.admin);
   const dispatch = useDispatch();
   const [showReport, setShowReport] = useState(false);
   const [newReport, setNewReport] = useState(false);
 
-  const templates = [
+  const repoType = [];
+
+  for (let temp of templates) {
+    if (!repoType.includes(temp.reportType)) repoType.push(temp.reportType);
+  }
+  const tempTypes = [
     "Single Picture",
     "Double Pictures",
     "Before/After Pictures",
   ];
 
-  const reports = ["RIM"];
+  useEffect(() => {
+    dispatch(getAdminValues());
+
+    // eslint-disable-next-line
+  }, []);
 
   const startReport = () => {
     const name = "reportName";
@@ -122,7 +133,7 @@ const NewReport = () => {
               label="Template Type:"
               name="templateType"
               value={templateType}
-              data={["Select", ...templates]}
+              data={["Select", ...tempTypes]}
               handleChange={handleChange}
             />
           </div>
@@ -131,7 +142,7 @@ const NewReport = () => {
               label="Report Type:"
               name="reportType"
               value={reportType}
-              data={["Select", ...reports]}
+              data={["Select", ...repoType]}
               handleChange={handleChange}
             />
           </div>

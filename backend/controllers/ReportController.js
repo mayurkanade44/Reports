@@ -1,4 +1,5 @@
 import Report from "../models/Report.js";
+import Admin from "../models/Admin.js";
 import newdoc from "docx-templates";
 import fs from "fs";
 import { dirname } from "path";
@@ -46,17 +47,33 @@ export const createReport = async (req, res) => {
     if (!reportName || !templateType || !reportType)
       return res.status(400).json({ msg: "Please provide all values" });
 
+    const adminValues = await Admin.find();
+
     let file = "",
       width = 16;
-    allTemplates.forEach((x) => {
-      if (x.templateType === templateType && x.reportType === reportType) {
-        file = x.file;
+    adminValues.forEach((x) => {
+      if (
+        x.template &&
+        x.template.templateType === templateType &&
+        x.template.reportType === reportType
+      ) {
+        file = x.template.file;
       }
     });
 
-    const template = fs.readFileSync(
-      path.resolve(__dirname, "../templates/", `${file}.docx`)
-    );
+    const resp = await axios.get(file, {
+      responseType: "arraybuffer",
+      // headers: {
+      //   Accept:
+      //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      // },
+    });
+
+    const template = Buffer.from(resp.data);
+
+    // const template = fs.readFileSync(
+    //   path.resolve(__dirname, "../templates/", `${file}.docx`)
+    // );
 
     if (templateType !== "Single Picture") width = 8;
 

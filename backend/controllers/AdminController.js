@@ -40,14 +40,17 @@ export const getValues = async (req, res) => {
   try {
     const values = await Admin.find();
     let findings = [],
-      suggestions = [];
+      suggestions = [],
+      templates = [];
     for (let value of values) {
       if (value.finding && value.finding !== null) findings.push(value.finding);
       if (value.suggestion && value.suggestion !== null)
         suggestions.push(value.suggestion);
+      if (value.template && value.template !== null)
+        templates.push(value.template);
     }
 
-    res.status(201).json({ findings, suggestions });
+    res.status(201).json({ findings, suggestions, templates });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
