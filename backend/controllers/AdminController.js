@@ -56,3 +56,21 @@ export const getValues = async (req, res) => {
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };
+
+export const uploadFile = async (file) => {
+  try {
+    const docFile = file;
+    const docPath = path.join(__dirname, "../files/" + `${docFile.name}`);
+    await docFile.mv(docPath);
+    const result = await cloudinary.uploader.upload(`files/${docFile.name}`, {
+      resource_type: "raw",
+      use_filename: true,
+      folder: "reports",
+    });
+    fs.unlinkSync(`./files/${docFile.name}`);
+    return result.secure_url;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};

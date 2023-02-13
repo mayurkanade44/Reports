@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
 import axios from "axios";
+import { uploadFile } from "./AdminController.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -154,6 +155,25 @@ export const uploadImages = async (req, res) => {
       link: result.secure_url,
       imageCount: req.body.imageCount,
     });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const editReport = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const report = await Report.findById(id);
+    if (!report) return res.status(404).json({ msg: "Report not found" });
+
+    if (req.files.file) {
+      const link = await uploadFile(req.files.file);
+      report.link = link;
+      await report.save();
+    }
+
+    return res.status(200).json({ msg: "Report has been updated" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
