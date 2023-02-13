@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { InputRow, InputSelect, Loading } from ".";
 import { useDispatch, useSelector } from "react-redux";
 import { addPage, createReport, uploadImage } from "../redux/reportSlice";
-import { addAdminValues, getAdminValues } from "../redux/adminSlice";
+import { addAdminValues } from "../redux/adminSlice";
 
 const initialState = {
   pest: "",
@@ -183,7 +183,9 @@ const CreateReport = () => {
               )}
             </div>
             <div className="col-md-6 mt-3 mb-2 d-flex">
-              <h4 className="img me-1">Image1:</h4>
+              <h4 className="img me-1">
+                {templateType === "Before/After Pictures" ? "Before" : "Image1"}
+              </h4>
               <input
                 type="file"
                 accept="image/*"
@@ -193,7 +195,11 @@ const CreateReport = () => {
             </div>
             {templateType !== "Single Picture" && (
               <div className="col-md-6 my-2 d-flex">
-                <h4 className="img me-1">Image2:</h4>
+                <h4 className="img me-1">
+                  {templateType === "Before/After Pictures"
+                    ? "After"
+                    : "Image2"}
+                </h4>
                 <input
                   type="file"
                   accept="image/*"

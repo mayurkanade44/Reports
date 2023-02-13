@@ -80,6 +80,19 @@ export const uploadImage = createAsyncThunk(
   }
 );
 
+export const editReport = createAsyncThunk(
+  "report/edit",
+  async ({ id, form }, thunkAPI) => {
+    try {
+      const res = await authFetch.patch(`/report/editReport/${id}`, form);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
 export const allReports = createAsyncThunk(
   "report/all",
   async (search, thunkAPI) => {
@@ -196,6 +209,17 @@ const reportSlice = createSlice({
         state.contract = payload.details;
       })
       .addCase(contractDetails.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload);
+      })
+      .addCase(editReport.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(editReport.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.success(payload.msg);
+      })
+      .addCase(editReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload);
       });

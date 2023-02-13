@@ -11,6 +11,7 @@ import {
 import { addAdminValues } from "../redux/adminSlice";
 import {
   allReports,
+  editReport,
   reportHandleChange,
   verifyReport,
 } from "../redux/reportSlice";
@@ -90,6 +91,13 @@ const Dashboard = () => {
     }, 500);
   };
 
+  const handleFile = (id, file) => {
+    const form = new FormData();
+
+    form.append("file", file);
+    dispatch(editReport({ id, form }));
+  };
+
   if (reportLoading || userLoading) return <Loading />;
 
   return (
@@ -165,6 +173,7 @@ const Dashboard = () => {
               th4="Download"
               data={reports}
               handleButton={handleVerify}
+              handleFile={handleFile}
             />
           </div>
         )}

@@ -1,4 +1,13 @@
-const Table = ({ user, th1, th2, th3, th4, data, handleButton }) => {
+const Table = ({
+  user,
+  th1,
+  th2,
+  th3,
+  th4,
+  data,
+  handleButton,
+  handleFile,
+}) => {
   return (
     <table className="table table-striped-columns table-bordered mt-2">
       <thead>
@@ -60,6 +69,21 @@ const Table = ({ user, th1, th2, th3, th4, data, handleButton }) => {
                       Approve
                     </button>
                   )}
+                  <label>
+                    <input
+                      type="file"
+                      onChange={(e) => handleFile(item._id, e.target.files[0])}
+                      style={{
+                        width: 0,
+                        height: 0,
+                        overflow: "hidden",
+                        opacity: 0,
+                      }}
+                    />
+                    <span className="btn btn-warning btn-sm ms-2">
+                      Upload File
+                    </span>
+                  </label>
                 </td>
               </tr>
             ))}
