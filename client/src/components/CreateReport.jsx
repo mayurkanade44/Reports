@@ -18,6 +18,14 @@ const CreateReport = () => {
     reportLoading,
     image1,
     image2,
+    meetTo,
+    meetContact,
+    meetEmail,
+    shownTo,
+    shownContact,
+    shownEmail,
+    inspectionDate,
+    contract,
     reportName,
     details,
     reportType,
@@ -39,8 +47,6 @@ const CreateReport = () => {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
   };
-
- 
 
   const handleImage1 = (e) => {
     const image = e.target.files[0];
@@ -83,7 +89,22 @@ const CreateReport = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createReport());
+    dispatch(
+      createReport({
+        reportName,
+        templateType,
+        reportType,
+        meetTo,
+        meetContact,
+        meetEmail,
+        shownTo,
+        shownContact,
+        shownEmail,
+        inspectionDate,
+        details,
+        contract,
+      })
+    );
   };
 
   const handleLastPage = () => {

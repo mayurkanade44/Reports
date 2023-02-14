@@ -23,41 +23,13 @@ const initialState = {
   search: "",
   approved: 0,
   emailSent: 0,
+  directReport: false,
 };
 
 export const createReport = createAsyncThunk(
   "report/create",
-  async (_, thunkAPI) => {
+  async (form, thunkAPI) => {
     try {
-      const {
-        reportName,
-        templateType,
-        reportType,
-        meetTo,
-        meetContact,
-        meetEmail,
-        shownTo,
-        shownContact,
-        shownEmail,
-        inspectionDate,
-        details,
-        contract,
-      } = thunkAPI.getState().report;
-
-      const form = {
-        reportName,
-        templateType,
-        reportType,
-        meetTo,
-        meetContact,
-        meetEmail,
-        shownTo,
-        shownContact,
-        shownEmail,
-        inspectionDate,
-        details,
-        contract,
-      };
       const res = await authFetch.post("/report/create", form);
       return res.data;
     } catch (error) {
@@ -66,6 +38,17 @@ export const createReport = createAsyncThunk(
     }
   }
 );
+
+// export const directReport = createAsyncThunk(
+//   "reports/directUpload",
+//   async (form, thunkAPI) => {
+//     try {
+//     } catch (error) {
+//       console.log(error);
+//       return thunkAPI.rejectWithValue(error.response.data.msg);
+//     }
+//   }
+// );
 
 export const uploadImage = createAsyncThunk(
   "report/imgUpload",
@@ -149,6 +132,13 @@ const reportSlice = createSlice({
     reportHandleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
+    directUpload: (state) => {
+      state.directReport = true;
+      state.templateType = "Direct";
+      state.reportType = "Direct";
+      state.meetTo = "Direct";
+      state.shownTo = "Direct";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -159,6 +149,7 @@ const reportSlice = createSlice({
         state.reportLoading = false;
         toast.success(payload.msg, { autoClose: 1000 });
         state.details = [];
+        state.directReport = false;
       })
       .addCase(createReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
@@ -226,6 +217,7 @@ const reportSlice = createSlice({
   },
 });
 
-export const { addPage, reportHandleChange } = reportSlice.actions;
+export const { addPage, reportHandleChange, directUpload } =
+  reportSlice.actions;
 
 export default reportSlice.reducer;

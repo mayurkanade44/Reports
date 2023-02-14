@@ -7,10 +7,16 @@ import {
   SearchContainer,
 } from "../components";
 import { getAdminValues } from "../redux/adminSlice";
-import { contractDetails, reportHandleChange } from "../redux/reportSlice";
+import {
+  contractDetails,
+  reportHandleChange,
+  directUpload,
+  createReport,
+} from "../redux/reportSlice";
 
 const NewReport = () => {
   const {
+    reportName,
     templateType,
     reportType,
     meetTo,
@@ -22,11 +28,13 @@ const NewReport = () => {
     inspectionDate,
     search,
     contract,
+    directReport,
   } = useSelector((store) => store.report);
   const { templates } = useSelector((store) => store.admin);
   const dispatch = useDispatch();
   const [showReport, setShowReport] = useState(false);
   const [newReport, setNewReport] = useState(false);
+  const [file, setFile] = useState("");
 
   const repoType = [];
 
@@ -65,6 +73,22 @@ const NewReport = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     dispatch(contractDetails(search));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = new FormData();
+
+    form.set("reportName", reportName);
+    form.set("templateType", templateType);
+    form.set("reportType", reportType);
+    form.set("meetTo", meetTo);
+    form.set("shownTo", shownTo);
+    form.set("contract", contract);
+    form.set("inspectionDate", inspectionDate);
+    form.append("file", file);
+
+    dispatch(createReport(form));
   };
 
   return showReport ? (
@@ -123,9 +147,46 @@ const NewReport = () => {
                   Create New Report
                 </button>
               </div>
+              <div className="col-2 mt-3">
+                <button
+                  className="btn btn-info"
+                  onClick={() => dispatch(directUpload(), setNewReport(true))}
+                >
+                  Direct Upload
+                </button>
+              </div>
             </>
           )}
         </>
+      ) : directReport ? (
+        <form onSubmit={handleSubmit}>
+          <div className="col-md-4">
+            <InputRow
+              label="Report Name:"
+              type="text"
+              name="reportName"
+              value={reportName}
+              handleChange={handleChange}
+            />
+          </div>
+          <div className="col-md-4">
+            <InputRow
+              label="Inspection Date:"
+              type="date"
+              name="inspectionDate"
+              value={inspectionDate}
+              handleChange={handleChange}
+            />
+          </div>
+          <div className="col-md-4 my-3">
+            <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+          </div>
+          <div className="col-md-4 text-center">
+            <button className="btn btn-primary" type="submit">
+              Submit Report
+            </button>
+          </div>
+        </form>
       ) : (
         <>
           <div className="col-md-6">
