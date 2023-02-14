@@ -37,6 +37,10 @@ export const createReport = async (req, res) => {
       return res.status(201).json({ msg: "Report successfully generated." });
     }
 
+    let emailList = contract.billToEmails.concat(contract.shipToEmails);
+    if (meetEmail.length > 0) emailList.push(meetEmail);
+    if (shownEmail.length > 0) emailList.push(shownEmail);
+
     const adminValues = await Admin.find();
 
     let file = "",
@@ -54,7 +58,6 @@ export const createReport = async (req, res) => {
     const resp = await axios.get(file, {
       responseType: "arraybuffer",
     });
-
     const template = Buffer.from(resp.data);
 
     if (templateType !== "Single Picture") width = 8;
@@ -103,12 +106,20 @@ export const createReport = async (req, res) => {
       }
     );
 
-    req.body.link = result.secure_url;
-    req.body.inspectionBy = req.user.name;
-
     fs.unlinkSync(`./files/${reportName}.docx`);
 
-    await Report.create(req.body);
+    await Report.create({
+      reportName,
+      reportType,
+      templateType,
+      meetTo,
+      shownTo,
+      inspectionBy: req.user.name,
+      inspectionDate,
+      details,
+      link: result.secure_url,
+      emailList,
+    });
 
     res.status(201).json({ msg: "Report successfully generated." });
   } catch (error) {
@@ -149,6 +160,7 @@ export const editReport = async (req, res) => {
     if (req.files.file) {
       const link = await uploadFile(req.files.file);
       report.link = link;
+      report.approved = true;
       await report.save();
     }
 
@@ -168,7 +180,7 @@ export const allReports = async (req, res) => {
     let reports = await Report.find(searchObject)
       .sort("-createdAt")
       .select(
-        "reportName reportType inspectionBy inspectionDate link approved email"
+        "reportName reportType inspectionBy inspectionDate link approved email emailList"
       );
     if (req.user.role === "Field") {
       reports = reports.filter((item) => item.inspectionBy === req.user.name);
@@ -184,13 +196,10 @@ export const allReports = async (req, res) => {
   }
 };
 
-export const verifyReport = async (req, res) => {
+export const sendEmail = async (req, res) => {
   const { id } = req.params;
   try {
-    const _id = id.split("-")[0];
-    const verify = id.split("-")[1];
-    const report = await Report.findById({ _id });
-    if (verify === "Approve") report.approved = true;
+    const report = await Report.findById({ id });
     if (verify === "Send Email") report.email = true;
     //send mail function
 
