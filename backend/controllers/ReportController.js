@@ -7,27 +7,8 @@ import { fileURLToPath } from "url";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
 import axios from "axios";
-import { uploadFile } from "./AdminController.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const allTemplates = [
-  {
-    templateType: "Single Picture",
-    reportType: "RIM",
-    file: "SinglePictureRIM",
-  },
-  {
-    templateType: "Double Pictures",
-    reportType: "RIM",
-    file: "DoublePicturesRIM",
-  },
-  {
-    templateType: "Double Picture B/A",
-    reportType: "RIM",
-    file: "BeforeAfterRIM",
-  },
-];
 
 export const createReport = async (req, res) => {
   const {
@@ -48,6 +29,10 @@ export const createReport = async (req, res) => {
     if (!reportName || !templateType || !reportType)
       return res.status(400).json({ msg: "Please provide all values" });
 
+    if (req.files.file) {
+      return;
+    }
+
     const adminValues = await Admin.find();
 
     let file = "",
@@ -64,17 +49,9 @@ export const createReport = async (req, res) => {
 
     const resp = await axios.get(file, {
       responseType: "arraybuffer",
-      // headers: {
-      //   Accept:
-      //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      // },
     });
 
     const template = Buffer.from(resp.data);
-
-    // const template = fs.readFileSync(
-    //   path.resolve(__dirname, "../templates/", `${file}.docx`)
-    // );
 
     if (templateType !== "Single Picture") width = 8;
 
@@ -127,11 +104,9 @@ export const createReport = async (req, res) => {
 
     fs.unlinkSync(`./files/${reportName}.docx`);
 
-    const newReport = await Report.create(req.body);
+    await Report.create(req.body);
 
-    res
-      .status(201)
-      .json({ msg: "Report successfully generated.", link: newReport.link });
+    res.status(201).json({ msg: "Report successfully generated." });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -221,5 +196,24 @@ export const verifyReport = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+
+export const uploadFile = async (file) => {
+  try {
+    const docFile = file;
+    const docPath = path.join(__dirname, "../files/" + `${docFile.name}`);
+    await docFile.mv(docPath);
+    const result = await cloudinary.uploader.upload(`files/${docFile.name}`, {
+      resource_type: "raw",
+      use_filename: true,
+      folder: "reports",
+    });
+    fs.unlinkSync(`./files/${docFile.name}`);
+    return result.secure_url;
+  } catch (error) {
+    console.log(error);
+    return error;
   }
 };
