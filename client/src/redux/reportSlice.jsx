@@ -39,17 +39,6 @@ export const createReport = createAsyncThunk(
   }
 );
 
-// export const directReport = createAsyncThunk(
-//   "reports/directUpload",
-//   async (form, thunkAPI) => {
-//     try {
-//     } catch (error) {
-//       console.log(error);
-//       return thunkAPI.rejectWithValue(error.response.data.msg);
-//     }
-//   }
-// );
-
 export const uploadImage = createAsyncThunk(
   "report/imgUpload",
   async (form, thunkAPI) => {
@@ -149,7 +138,6 @@ const reportSlice = createSlice({
         state.reportLoading = false;
         toast.success(payload.msg, { autoClose: 1000 });
         state.details = [];
-        state.directReport = false;
       })
       .addCase(createReport.rejected, (state, { payload }) => {
         state.reportLoading = false;

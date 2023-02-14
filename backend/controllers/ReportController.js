@@ -29,8 +29,12 @@ export const createReport = async (req, res) => {
     if (!reportName || !templateType || !reportType)
       return res.status(400).json({ msg: "Please provide all values" });
 
-    if (req.files.file) {
-      return;
+    if (templateType === "Direct" && req.files.file) {
+      const link = await uploadFile(req.files.file);
+      req.body.link = link;
+      req.body.inspectionBy = req.user.name;
+      await Report.create(req.body);
+      return res.status(201).json({ msg: "Report successfully generated." });
     }
 
     const adminValues = await Admin.find();
@@ -198,7 +202,6 @@ export const verifyReport = async (req, res) => {
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };
-
 
 export const uploadFile = async (file) => {
   try {

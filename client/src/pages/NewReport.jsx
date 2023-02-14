@@ -89,6 +89,7 @@ const NewReport = () => {
     form.append("file", file);
 
     dispatch(createReport(form));
+    setNewReport(false);
   };
 
   return showReport ? (
