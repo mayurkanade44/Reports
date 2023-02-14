@@ -12,8 +12,9 @@ import { addAdminValues } from "../redux/adminSlice";
 import {
   allReports,
   editReport,
+  mailForm,
   reportHandleChange,
-  verifyReport,
+  sendEmail,
 } from "../redux/reportSlice";
 import {
   getAllUsers,
@@ -26,9 +27,15 @@ const Dashboard = () => {
   const { userLoading, allUsers, name, email, password, role } = useSelector(
     (store) => store.user
   );
-  const { reports, reportLoading, search, approved, emailSent } = useSelector(
-    (store) => store.report
-  );
+  const {
+    reports,
+    reportLoading,
+    search,
+    approved,
+    emailSent,
+    mailId,
+    emailList,
+  } = useSelector((store) => store.report);
   const ref = useRef();
   const dispatch = useDispatch();
   const [show, setShow] = useState("All Reports");
@@ -71,8 +78,14 @@ const Dashboard = () => {
     dispatch(allReports(search));
   };
 
-  const handleVerify = (id) => {
-    dispatch(verifyReport(id));
+  const handleMailForm = (id, emails) => {
+    dispatch(mailForm({ id, emails }));
+  };
+
+  const handleSendMail = (e) => {
+    e.preventDefault();
+    let emails = form.template;
+    dispatch(sendEmail({ emailList, emails, mailId }));
   };
 
   const addTemplate = (e) => {
@@ -151,7 +164,29 @@ const Dashboard = () => {
             }
           />
         </div>
-        <ReportStats data={stats} />
+        {mailId.length > 0 ? (
+          <div>
+            <h6>Emails - {emailList.toString()}</h6>
+            <div className="col-6 d-flex">
+              <InputRow
+                label="Extra Email:"
+                type="email"
+                value={form.template}
+                handleChange={(e) =>
+                  setForm({ ...form, template: e.target.value })
+                }
+              />
+              <button
+                className="btn btn-success btn-sm ms-3"
+                onClick={handleSendMail}
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        ) : (
+          <ReportStats data={stats} />
+        )}
         {show === "All Users" && (
           <div className="col-12">
             <Table
@@ -170,9 +205,9 @@ const Dashboard = () => {
               th1="Report Name"
               th2="Report By"
               th3="Inspection Date"
-              th4="Download"
+              th4="Actions"
               data={reports}
-              handleButton={handleVerify}
+              handleButton={handleMailForm}
               handleFile={handleFile}
             />
           </div>

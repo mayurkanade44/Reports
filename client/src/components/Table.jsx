@@ -15,7 +15,7 @@ const Table = ({
           <th style={{ width: 240 }}>{th1}</th>
           <th>{th2}</th>
           <th>{th3}</th>
-          {th4 && <th>{th4}</th>}
+          {th4 && <th className="text-center">{th4}</th>}
         </tr>
       </thead>
       <tbody>
@@ -42,7 +42,7 @@ const Table = ({
                 <td>{item.inspectionBy}</td>
                 <td>{item.inspectionDate}</td>
                 <td>
-                  <button className="btn btn-primary btn-sm me-2">
+                  <button className="btn btn-primary btn-sm me-3" type="button">
                     <a
                       href={item.link}
                       style={{ textDecoration: "none", color: "whitesmoke" }}
@@ -50,26 +50,7 @@ const Table = ({
                       Download
                     </a>
                   </button>
-                  {item.approved ? (
-                    <button
-                      className="btn btn-info btn-sm"
-                      onClick={(e) =>
-                        handleButton(item._id + "-" + e.target.textContent)
-                      }
-                    >
-                      Send Email
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-success btn-sm"
-                      onClick={(e) =>
-                        handleButton(item._id + "-" + e.target.textContent)
-                      }
-                    >
-                      Approve
-                    </button>
-                  )}
-                  <label>
+                  <label className="me-3">
                     <input
                       type="file"
                       onChange={(e) => handleFile(item._id, e.target.files[0])}
@@ -80,10 +61,20 @@ const Table = ({
                         opacity: 0,
                       }}
                     />
-                    <span className="btn btn-warning btn-sm ms-2">
+                    <span className="btn btn-warning btn-sm">
                       Upload File
                     </span>
                   </label>
+                  {item.approved && (
+                    <button
+                      className="btn btn-info btn-sm"
+                      onClick={(e) =>
+                        handleButton(item._id, item.emailList)
+                      }
+                    >
+                      Send Email
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

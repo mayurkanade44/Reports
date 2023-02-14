@@ -24,6 +24,8 @@ const initialState = {
   approved: 0,
   emailSent: 0,
   directReport: false,
+  mailId: "",
+  emailList: [],
 };
 
 export const createReport = createAsyncThunk(
@@ -80,12 +82,11 @@ export const allReports = createAsyncThunk(
   }
 );
 
-export const verifyReport = createAsyncThunk(
+export const sendEmail = createAsyncThunk(
   "report/verify",
-  async (id, thunkAPI) => {
+  async (form, thunkAPI) => {
     try {
-      const res = await authFetch.patch(`/report/verifyReport/${id}`);
-      thunkAPI.dispatch(allReports(thunkAPI.getState().report.search));
+      const res = await authFetch.post(`/report/sendEmail`, form);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -128,6 +129,10 @@ const reportSlice = createSlice({
       state.meetTo = "Direct";
       state.shownTo = "Direct";
     },
+    mailForm: (state, { payload: { id, emails } }) => {
+      state.mailId = id;
+      state.emailList = emails;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -168,14 +173,14 @@ const reportSlice = createSlice({
         state.reportLoading = false;
         console.log(payload);
       })
-      .addCase(verifyReport.pending, (state) => {
+      .addCase(sendEmail.pending, (state) => {
         state.reportLoading = true;
       })
-      .addCase(verifyReport.fulfilled, (state, { payload }) => {
+      .addCase(sendEmail.fulfilled, (state, { payload }) => {
         state.reportLoading = false;
         toast.success(payload.msg);
       })
-      .addCase(verifyReport.rejected, (state, { payload }) => {
+      .addCase(sendEmail.rejected, (state, { payload }) => {
         state.reportLoading = false;
         console.log(payload);
       })
@@ -205,7 +210,7 @@ const reportSlice = createSlice({
   },
 });
 
-export const { addPage, reportHandleChange, directUpload } =
+export const { addPage, reportHandleChange, directUpload, mailForm } =
   reportSlice.actions;
 
 export default reportSlice.reducer;
