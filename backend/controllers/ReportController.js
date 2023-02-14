@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
 import axios from "axios";
+import sgMail from "@sendgrid/mail";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -197,15 +198,49 @@ export const allReports = async (req, res) => {
 };
 
 export const sendEmail = async (req, res) => {
-  const { id } = req.params;
+  const { emailList, emails, mailId } = req.body;
   try {
-    const report = await Report.findById({ id });
-    if (verify === "Send Email") report.email = true;
-    //send mail function
+    const report = await Report.findById(mailId);
 
+    const attach = [];
+    const fileType = report.link.split(".").pop();
+    const result = await axios.get(report.link, {
+      responseType: "arraybuffer",
+    });
+    const base64File = Buffer.from(result.data, "binary").toString("base64");
+    const attachObj = {
+      content: base64File,
+      filename: `${report.reportName}.${fileType}`,
+      type: `application/${fileType}`,
+      disposition: "attachment",
+    };
+    attach.push(attachObj);
+
+    const emailTo = [];
+    for (let email of emailList) {
+      if (email !== "clientproxymail@gmail.com" && !emailTo.includes(email))
+        emailTo.push(email);
+    }
+
+    if (emails.length > 0) emailTo.push(emails);
+
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+      to: emailTo,
+      from: { email: "noreply.epcorn@gmail.com", name: "donotreply_epcorn" },
+      dynamic_template_data: {
+        fileName: report.reportName,
+        name: req.user.name,
+      },
+      template_id: "d-0e9f59c886f84dd7ba895e0a3390697e",
+      attachments: attach,
+    };
+    await sgMail.send(msg);
+
+    report.email = true;
     await report.save();
 
-    res.status(200).json({ msg: "ok" });
+    res.status(200).json({ msg: "Email has been sent" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

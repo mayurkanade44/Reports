@@ -59,6 +59,7 @@ export const editReport = createAsyncThunk(
   async ({ id, form }, thunkAPI) => {
     try {
       const res = await authFetch.patch(`/report/editReport/${id}`, form);
+      thunkAPI.dispatch(allReports(""));
       return res.data;
     } catch (error) {
       console.log(error);
