@@ -3,51 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../redux/userSlice";
 import menu from "./menu.png";
+import report from "./report.png";
 const Navbar = () => {
   const [expand, setExpand] = useState(false);
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   return (
-    <header className="container-fluid sticky-top">
-      <div className="row col-det">
-        {/* <div className="col-lg-5 col-md-7 cont">
-              <ul className="ulleft">
-                <li>
-                  <img src={email} className="pb-1 mx-1" alt="email" />
-                  <small> ghf.org.in@gmail.com</small>
-                </li>
-                <li>
-                  <img src={phone} className="pb-1" alt="phone" />
-                  <small> +7400 453 069</small>
-                </li>
-              </ul>
-            </div> */}
-        {/* <div className="col-lg-4 col-md-6 follows d-flex justify-content-lg-start">
-              <ul className="ulright">
-                <li className="follow-li">
-                  <small>Follow Us :</small>
-                </li>
-                {socialMedia.map((item) => (
-                  <li key={item.id}>
-                    <a href={item.link} target="_blank" rel="noreferrer">
-                      <img src={item.image} alt={item.name} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div> */}
-        {/* <div className="col-lg-3 d-none d-md-block col-md-5 d-flex justify-content-center btn-bhed">
-              <Link to="/ContactUs">
-                <button className="btn btn-sm btn-success">Join Us</button>
-              </Link>
-              <button className="btn btn-sm btn-default">Donate</button>
-            </div> */}
-      </div>
+    <header className="sticky-top">
       <nav className="navbar navbar-expand-lg">
         <div className="container">
           <div className="mobile-nav">
             <Link to="/" className="navbar-brand">
+              <img src={report} alt="report" />
               Reports
             </Link>
             <button
@@ -67,18 +35,21 @@ const Navbar = () => {
               id="navbarNav"
             >
               <ul className="navbar-nav ms-auto">
-                <li className="nav-item">
-                  <Link
-                    to="/dashboard"
-                    className="nav-link text-center"
-                    aria-current="page"
-                    onClick={() => {
-                      setExpand(false);
-                    }}
-                  >
-                    Dashboard
-                  </Link>
-                </li>
+                {user.role === "Back Office" ||
+                  (user.role === "Admin" && (
+                    <li className="nav-item">
+                      <Link
+                        to="/dashboard"
+                        className="nav-link text-center"
+                        aria-current="page"
+                        onClick={() => {
+                          setExpand(false);
+                        }}
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
+                  ))}
                 <li className="nav-item">
                   <Link
                     to="/create-report"

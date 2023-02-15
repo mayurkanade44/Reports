@@ -1,6 +1,6 @@
 const ReportStats = ({data}) => {
   return (
-    <div className="row">
+    <div className="row mb-2">
       {data.map((item, index) => (
         <div className="col-md-3" key={index}>
           <div className={`card bg-${item.bg}`}>

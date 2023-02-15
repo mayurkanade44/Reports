@@ -132,14 +132,7 @@ const Dashboard = () => {
             All Users
           </button>
         </div>
-        <div className="col-2">
-          <button
-            className="btn btn-primary"
-            onClick={(e) => setShow(e.target.textContent)}
-          >
-            Register User
-          </button>
-        </div>
+
         <div className="col-2">
           <button
             className="btn btn-primary"
@@ -185,19 +178,29 @@ const Dashboard = () => {
             </div>
           </div>
         ) : (
-          <ReportStats data={stats} />
+          <ReportStats data={stats}/>
         )}
         {show === "All Users" && (
-          <div className="col-12">
-            <Table
-              user="Admin"
-              th1="Name"
-              th2="Role"
-              th3="Delete"
-              data={allUsers}
-              handleButton={handleDelete}
-            />
-          </div>
+          <>
+            <div className="col-2 mt-2">
+              <button
+                className="btn btn-primary"
+                onClick={(e) => setShow(e.target.textContent)}
+              >
+                Register User
+              </button>
+            </div>
+            <div className="col-12">
+              <Table
+                user="Admin"
+                th1="Name"
+                th2="Role"
+                th3="Delete"
+                data={allUsers}
+                handleButton={handleDelete}
+              />
+            </div>
+          </>
         )}
         {show === "All Reports" && (
           <div className="col-12">

@@ -31,6 +31,7 @@ const NewReport = () => {
     directReport,
   } = useSelector((store) => store.report);
   const { templates } = useSelector((store) => store.admin);
+  const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const [showReport, setShowReport] = useState(false);
   const [newReport, setNewReport] = useState(false);
@@ -95,10 +96,10 @@ const NewReport = () => {
   return showReport ? (
     <CreateReport />
   ) : (
-    <div className="row m-2 d-flex flex-column min-vh-100 justify-content-center align-items-center">
+    <div className="row my-3 mx-1 d-flex justify-content-center">
       {!newReport ? (
         <>
-          <div className="col-md-6">
+          <div className="col-md-6 mt-1">
             <SearchContainer
               placeholder="Contract Number"
               name="search"
@@ -115,52 +116,71 @@ const NewReport = () => {
             />
           </div>
           {contract && (
-            <>
-              <div className="col-10">
+            <div className="row">
+              <div className="col-md-6">
                 <table className="table table-bordered">
                   <thead>
                     <tr>
-                      <th>Bill To Details</th>
-                      <th>Ship To Details</th>
+                      <th className="text-center">Bill To Details</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <th>Name - {contract.billToName}</th>
-                      <th>Name - {contract.shipToName}</th>
+                      <td>Name - {contract.billToName}</td>
                     </tr>
                     <tr>
-                      <th>Address - {contract.billToAddress}</th>
-                      <th>Address - {contract.shipToAddress}</th>
+                      <td>Address - {contract.billToAddress}</td>
                     </tr>
                     <tr>
-                      <th>Email - {contract.billToEmails}</th>
-                      <th>Email - {contract.shipToEmails}</th>
+                      <td>Email - {contract.billToEmails.toString()}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <div className="col-2">
+              <div className="col-md-6">
+                <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th className="text-center">Ship To Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Name - {contract.shipToName}</td>
+                    </tr>
+                    <tr>
+                      <td>Address - {contract.shipToAddress}</td>
+                    </tr>
+                    <tr>
+                      <td>Email - {contract.shipToEmails.toString()}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="col-12 d-flex justify-content-center">
                 <button
                   className="btn btn-primary"
                   onClick={() => setNewReport(true)}
                 >
                   Create New Report
                 </button>
+                {user.role === "Admin" && (
+                  <button
+                    className="btn btn-info ms-3"
+                    onClick={() => dispatch(directUpload(), setNewReport(true))}
+                  >
+                    Direct Upload
+                  </button>
+                )}
               </div>
-              <div className="col-2 mt-3">
-                <button
-                  className="btn btn-info"
-                  onClick={() => dispatch(directUpload(), setNewReport(true))}
-                >
-                  Direct Upload
-                </button>
-              </div>
-            </>
+            </div>
           )}
         </>
       ) : directReport ? (
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          className="d-flex flex-column min-vh-100 justify-content-center align-items-center"
+        >
           <div className="col-md-4">
             <InputRow
               label="Report Name:"

@@ -29,12 +29,12 @@ const CreateReport = () => {
     reportName,
     details,
     reportType,
-    inspectionBy,
     templateType,
   } = useSelector((store) => store.report);
   const { adminLoading, findings, suggestions } = useSelector(
     (store) => store.admin
   );
+  const { user } = useSelector((store) => store.user);
   const [lastPage, setLastPage] = useState(false);
   const [formValue, setFormValue] = useState(initialState);
   const [other, setOther] = useState({ find: "", suggest: "" });
@@ -126,7 +126,7 @@ const CreateReport = () => {
             {reportType !== "RIM" && (
               <div className="col-md-6">
                 <InputRow
-                  label="Pest"
+                  label="Pest:"
                   type="text"
                   name="pest"
                   value={pest}
@@ -136,7 +136,7 @@ const CreateReport = () => {
             )}
             <div className="col-md-6">
               <InputRow
-                label="Floor"
+                label="Floor:"
                 type="text"
                 name="floor"
                 value={floor}
@@ -145,7 +145,7 @@ const CreateReport = () => {
             </div>
             <div className="col-md-6">
               <InputRow
-                label="Sub Floor"
+                label="Sub Floor:"
                 type="text"
                 name="subFloor"
                 value={subFloor}
@@ -154,7 +154,7 @@ const CreateReport = () => {
             </div>
             <div className="col-md-6">
               <InputRow
-                label="Location"
+                label="Location:"
                 type="text"
                 name="location"
                 value={location}
@@ -214,23 +214,24 @@ const CreateReport = () => {
                 onChange={handleImage1}
               />
             </div>
-            {templateType !== "Single Picture" && (
-              <div className="col-md-6 my-2 d-flex">
-                <h4 className="img me-1">
-                  {templateType === "Before/After Pictures"
-                    ? "After"
-                    : "Image2"}
-                </h4>
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={ref}
-                  onChange={handleImage2}
-                />
-              </div>
-            )}
-
-            <div className="col-4 mt-4">
+            <div className="col-md-6 my-2 d-flex">
+              {templateType !== "Single Picture" && (
+                <>
+                  <h4 className="img me-1">
+                    {templateType === "Before/After Pictures"
+                      ? "After"
+                      : "Image2"}
+                  </h4>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={ref}
+                    onChange={handleImage2}
+                  />
+                </>
+              )}
+            </div>
+            <div className="col-2 mt-4">
               <button
                 type="button"
                 className="btn btn-primary"
@@ -272,7 +273,7 @@ const CreateReport = () => {
             <div className="col-md-6 my-3">
               <h4>Report Name - {reportName}</h4>
               <h4>Report Pages - {details.length + 2}</h4>
-              <h4>Report By - {inspectionBy}</h4>
+              <h4>Report By - {user.name}</h4>
             </div>
             <div className="col-md-6 d-flex justify-content-center mt-5">
               <button

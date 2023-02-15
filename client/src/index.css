@@ -113,6 +113,11 @@ header .header-top .btn-bhed .btn {
 .mobile-nav {
   height: 40px;
 }
+.mobile-nav img {
+  width: 33px;
+  margin-right: 5px;
+  padding-bottom: 5px;
+}
 
 header .nav-link {
   margin-left: 20px;
@@ -158,9 +163,8 @@ header .nav-link:hover {
   .navbar {
     padding: 0px;
   }
-  .cont {
-    display: flex;
-    justify-content: space-around !important;
+  .navbar .container {
+    margin: 4px;
   }
   header .header-top .col-det .ulleft li {
     padding-top: 2px;
@@ -170,9 +174,7 @@ header .nav-link:hover {
     color: #8c8a8a;
     font-size: 13px;
   }
-  .ulleft img {
-    width: 20px;
-  }
+
   header .nav-link {
     color: #686968 !important;
     border: 1px solid #ccc;
@@ -203,7 +205,7 @@ header .nav-link:hover {
     display: none !important;
   }
   .navbar-toggler img {
-    width: 20px !important;
+    width: 25px !important;
     margin-right: 10px;
   }
   header .logo {
@@ -211,6 +213,21 @@ header .nav-link:hover {
     width: 60px;
   }
   .navbar-toggler {
-    padding-top: 5px !important;
+    padding-top: 8px !important;
   }
+  .table td {
+    font-size: 12px;
+  }
+  .table th {
+    font-size: 14px;
+  }
+}
+
+.contract {
+  animation: scale-display 0.3s;
+  display: inline-flex;
+}
+
+.new-report {
+  bottom: 40%;
 }
