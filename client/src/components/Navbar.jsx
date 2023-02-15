@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { logout } from "../redux/userSlice";
 import menu from "./menu.png";
 const Navbar = () => {
   const [expand, setExpand] = useState(false);
   const { user } = useSelector((store) => store.user);
+  const dispatch = useDispatch();
 
   return (
     <header className="container-fluid sticky-top">
@@ -59,49 +61,50 @@ const Navbar = () => {
               <img src={menu} alt="menu" style={{ width: 35 }} />
             </button>
           </div>
-          <div
-            className={`navbar-collapse ${!expand ? "collapse" : ""}`}
-            id="navbarNav"
-          >
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link
-                  to="/dashboard"
-                  className="nav-link text-center"
-                  aria-current="page"
-                  onClick={() => {
-                    setExpand(false);
-                  }}
-                >
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  to="/create-report"
-                  className="nav-link text-center"
-                  aria-current="page"
-                  onClick={() => {
-                    setExpand(false);
-                  }}
-                >
-                  New Report
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  to="/"
-                  className="nav-link text-center"
-                  aria-current="page"
-                  onClick={() => {
-                    setExpand(false);
-                  }}
-                >
-                  Log Out
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {user && (
+            <div
+              className={`navbar-collapse ${!expand ? "collapse" : ""}`}
+              id="navbarNav"
+            >
+              <ul className="navbar-nav ms-auto">
+                <li className="nav-item">
+                  <Link
+                    to="/dashboard"
+                    className="nav-link text-center"
+                    aria-current="page"
+                    onClick={() => {
+                      setExpand(false);
+                    }}
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/create-report"
+                    className="nav-link text-center"
+                    aria-current="page"
+                    onClick={() => {
+                      setExpand(false);
+                    }}
+                  >
+                    New Report
+                  </Link>
+                </li>
+                <li className="nav-item logout">
+                  <button
+                    className="btn nav-link text-center"
+                    aria-current="page"
+                    onClick={() => {
+                      dispatch(logout());
+                    }}
+                  >
+                    Log Out
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </nav>
     </header>

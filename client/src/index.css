@@ -195,6 +195,10 @@ header .nav-link:hover {
     margin-left: 1px;
     font-size: 12px;
   }
+  .logout {
+    display: flex;
+    justify-content: center;
+  }
   .follows {
     display: none !important;
   }

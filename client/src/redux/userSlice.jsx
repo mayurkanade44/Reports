@@ -59,8 +59,6 @@ export const userDelete = createAsyncThunk(
   }
 );
 
-
-
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -73,6 +71,11 @@ const userSlice = createSlice({
       state.name = "";
       state.password = "";
       state.role = "";
+    },
+    logout: (state) => {
+      state.user = null;
+      localStorage.removeItem("user");
+      toast.success("Logged out successfully");
     },
   },
   extraReducers: (builder) => {
@@ -124,6 +127,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { handleUserChange, clearValues } = userSlice.actions;
+export const { handleUserChange, clearValues, logout } = userSlice.actions;
 
 export default userSlice.reducer;
