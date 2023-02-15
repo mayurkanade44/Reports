@@ -32,8 +32,10 @@ export const createReport = async (req, res) => {
 
     if (templateType === "Direct" && req.files.file) {
       const link = await uploadFile(req.files.file);
+      req.body.emailList = contract.split(",");
       req.body.link = link;
       req.body.inspectionBy = req.user.name;
+      req.body.approved = true;
       await Report.create(req.body);
       return res.status(201).json({ msg: "Report successfully generated." });
     }

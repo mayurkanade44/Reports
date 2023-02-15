@@ -85,7 +85,7 @@ const NewReport = () => {
     form.set("reportType", reportType);
     form.set("meetTo", meetTo);
     form.set("shownTo", shownTo);
-    form.set("contract", contract);
+    form.set("contract", contract.billToEmails.concat(contract.shipToEmails));
     form.set("inspectionDate", inspectionDate);
     form.append("file", file);
 
