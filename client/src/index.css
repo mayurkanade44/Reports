@@ -23,7 +23,6 @@ code {
   }
 }
 
-
 .modal {
   display: block;
   position: fixed; /* Stay in place */
@@ -35,4 +34,179 @@ code {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/*---------------------Navbar--------------*/
+
+header {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  background-color: #fff;
+  width: 100%;
+  z-index: 99;
+}
+
+header .header-top {
+  background-color: #fff;
+  border-bottom: 1px solid #d3d7cea6;
+  padding: 7px 7px 3px 7px;
+}
+header .header-top .col-det .ulleft li {
+  float: left;
+  padding: 2px;
+  color: #686968;
+  font-size: 0.9rem;
+}
+.follow-li {
+  padding-top: 12px !important;
+}
+header .header-top .col-det .ulleft li i {
+  margin-right: 5px;
+  color: #bfbfbf;
+}
+header .header-top .col-det .ulleft li span {
+  margin-left: 15px;
+}
+header .header-top .col-det .ulright {
+  float: right;
+}
+.ulleft img,
+.ulright img {
+  width: 23px;
+}
+header .header-top .col-det .ulright li {
+  float: left;
+  padding: 10px;
+  color: #d3d7ce;
+  font-size: 1rem;
+  font-weight: 600;
+}
+header .header-top .col-det .ulright li i {
+  margin-right: 5px;
+  color: #8c8a8a;
+}
+header .header-top .col-det .ulright li small,
+header .header-top .col-det .ulleft li small {
+  color: #8c8a8a;
+  font-weight: 600;
+  font-size: 16px;
+}
+header .header-top .col-det .ulright li span {
+  margin-left: 15px;
+}
+header .header-top .btn-bhed {
+  padding-top: 7px;
+  text-align: center !important;
+}
+header .header-top .btn-bhed .btn {
+  padding: 5px 23px;
+  border-radius: 50px;
+  margin-left: 5px;
+}
+
+.navbar-toggler {
+  position: absolute;
+  right: 0px;
+  border: 0px;
+  padding-top: 15px;
+}
+
+.mobile-nav {
+  height: 40px;
+}
+
+header .nav-link {
+  margin-left: 20px;
+  font-weight: 600;
+  color: black;
+  font-size: 18px;
+}
+
+.navbar-brand {
+  font-size: 25px !important;
+  font-weight: 600;
+}
+
+header .nav-link:hover {
+  color: gold;
+}
+
+.navbar {
+  padding: 4px;
+}
+
+@media (max-width: 1023px) {
+  header .container {
+    padding: 0px 15px;
+  }
+  .navbar-toggler img {
+    width: 40px !important;
+    margin-right: 25px;
+  }
+  header .logo {
+    height: 70px;
+    width: 80px;
+  }
+  .navbar {
+    padding: 0px !important;
+  }
+  .follows {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .navbar {
+    padding: 0px;
+  }
+  .cont {
+    display: flex;
+    justify-content: space-around !important;
+  }
+  header .header-top .col-det .ulleft li {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  header .header-top .col-det .ulleft li small {
+    color: #8c8a8a;
+    font-size: 13px;
+  }
+  .ulleft img {
+    width: 20px;
+  }
+  header .nav-link {
+    color: #686968 !important;
+    border: 1px solid #ccc;
+    padding: 2px 10px !important;
+    border-radius: 50px;
+    margin: 5px 70px;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  header .header-top .btn-bhed {
+    padding: 2px;
+    text-align: right;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  header .header-top .btn-bhed .btn {
+    padding: 2px 15px;
+    margin-right: 15px;
+    border-radius: 50px;
+    margin-left: 1px;
+    font-size: 12px;
+  }
+  .follows {
+    display: none !important;
+  }
+  .navbar-toggler img {
+    width: 20px !important;
+    margin-right: 10px;
+  }
+  header .logo {
+    height: 55px;
+    width: 60px;
+  }
+  .navbar-toggler {
+    padding-top: 5px !important;
+  }
 }
