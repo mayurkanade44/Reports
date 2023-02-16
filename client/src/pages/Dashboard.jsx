@@ -11,6 +11,7 @@ import {
 import { addAdminValues } from "../redux/adminSlice";
 import {
   allReports,
+  changePage,
   editReport,
   mailForm,
   reportHandleChange,
@@ -31,10 +32,11 @@ const Dashboard = () => {
     reports,
     reportLoading,
     search,
-    approved,
-    emailSent,
+    reportsStats,
     mailId,
     emailList,
+    totalPages,
+    page,
   } = useSelector((store) => store.report);
   const ref = useRef();
   const dispatch = useDispatch();
@@ -50,18 +52,22 @@ const Dashboard = () => {
     dispatch(allReports());
 
     // eslint-disable-next-line
-  }, []);
+  }, [page]);
 
   const stats = [
-    { bg: "secondary", count: reports.length, text: "Number Of Reports" },
+    { bg: "secondary", count: reportsStats.reports, text: "Number Of Reports" },
     {
       bg: "danger",
-      count: reports.length - approved,
+      count: reportsStats.reports - reportsStats.approved,
       text: "Pending For Approval",
     },
-    { bg: "success", count: approved, text: "Reports Approved" },
+    { bg: "success", count: reportsStats.approved, text: "Reports Approved" },
 
-    { bg: "danger", count: reports.length - emailSent, text: "Email Not Sent" },
+    {
+      bg: "danger",
+      count: reportsStats.reports - reportsStats.email,
+      text: "Email Not Sent",
+    },
   ];
 
   const handleDelete = (id) => {
@@ -111,10 +117,12 @@ const Dashboard = () => {
     dispatch(editReport({ id, form }));
   };
 
+  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+
   if (reportLoading || userLoading) return <Loading />;
 
   return (
-    <div className="container my-2">
+    <div className="container my-3">
       <div className="row">
         <div className="col-2">
           <button
@@ -132,7 +140,6 @@ const Dashboard = () => {
             All Users
           </button>
         </div>
-
         <div className="col-2">
           <button
             className="btn btn-primary"
@@ -178,7 +185,7 @@ const Dashboard = () => {
             </div>
           </div>
         ) : (
-          <ReportStats data={stats}/>
+          <ReportStats data={stats} />
         )}
         {show === "All Users" && (
           <>
@@ -213,6 +220,22 @@ const Dashboard = () => {
               handleButton={handleMailForm}
               handleFile={handleFile}
             />
+            <nav aria-label="Page navigation example">
+              <ul className="pagination">
+                {pages.map((page) => (
+                  <li className="page-item" key={page}>
+                    <button
+                      className="page-link"
+                      onClick={(e) =>
+                        dispatch(changePage(e.target.textContent))
+                      }
+                    >
+                      {page}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         )}
         {show === "Register User" && (

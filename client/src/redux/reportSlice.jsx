@@ -21,11 +21,12 @@ const initialState = {
   details: [],
   reports: [],
   search: "",
-  approved: 0,
-  emailSent: 0,
+  reportsStats: {},
   directReport: false,
   mailId: "",
   emailList: [],
+  totalPages: 1,
+  page: 1,
 };
 
 export const createReport = createAsyncThunk(
@@ -72,8 +73,8 @@ export const allReports = createAsyncThunk(
   "report/all",
   async (search, thunkAPI) => {
     try {
-      let url = "/report/allReports";
-      if (search) url += `?search=${search}`;
+      let url = `/report/allReports?page=${thunkAPI.getState().report.page}`;
+      if (search) url += `&search=${search}`;
       const res = await authFetch.get(url);
       return res.data;
     } catch (error) {
@@ -134,6 +135,9 @@ const reportSlice = createSlice({
       state.mailId = id;
       state.emailList = emails;
     },
+    changePage: (state, { payload }) => {
+      state.page = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -144,6 +148,8 @@ const reportSlice = createSlice({
         state.reportLoading = false;
         toast.success(payload.msg, { autoClose: 1000 });
         state.details = [];
+        state.contract = null;
+        state.search = "";
       })
       .addCase(createReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
@@ -167,8 +173,8 @@ const reportSlice = createSlice({
       .addCase(allReports.fulfilled, (state, { payload }) => {
         state.reportLoading = false;
         state.reports = payload.reports;
-        state.approved = payload.approved;
-        state.emailSent = payload.email;
+        state.reportsStats = payload.reportStats
+        state.totalPages = payload.totalPages;
       })
       .addCase(allReports.rejected, (state, { payload }) => {
         state.reportLoading = false;
@@ -211,7 +217,12 @@ const reportSlice = createSlice({
   },
 });
 
-export const { addPage, reportHandleChange, directUpload, mailForm } =
-  reportSlice.actions;
+export const {
+  addPage,
+  reportHandleChange,
+  directUpload,
+  mailForm,
+  changePage,
+} = reportSlice.actions;
 
 export default reportSlice.reducer;

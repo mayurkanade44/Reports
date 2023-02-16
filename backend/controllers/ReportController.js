@@ -180,19 +180,37 @@ export const allReports = async (req, res) => {
   try {
     if (search) searchObject.reportName = { $regex: search, $options: "i" };
 
-    let reports = await Report.find(searchObject)
+    const allReports = await Report.find();
+    const approved = allReports.filter((item) => item.approved === true).length;
+    const email = allReports.filter((item) => item.email === true).length;
+
+    const reportStats = {
+      reports: allReports.length,
+      approved: approved,
+      email: email,
+    };
+
+    let repo = Report.find(searchObject)
       .sort("-createdAt")
       .select(
         "reportName reportType inspectionBy inspectionDate link approved email emailList"
       );
-    if (req.user.role === "Field") {
-      reports = reports.filter((item) => item.inspectionBy === req.user.name);
-    }
+    // if (req.user.role === "Field") {
+    //   reports = reports.filter((item) => item.inspectionBy === req.user.name);
+    // }
 
-    const approved = reports.filter((item) => item.approved === true).length;
-    const email = reports.filter((item) => item.email === true).length;
+    const page = Number(req.query.page) || 1;
+    const pageLimit = 20;
 
-    return res.status(200).json({ reports, approved, email });
+    repo = repo.skip(page * pageLimit - pageLimit).limit(pageLimit);
+
+    const reports = await repo;
+
+    const totalPages = Math.ceil(
+      (await Report.countDocuments(searchObject)) / pageLimit
+    );
+
+    return res.status(200).json({ reports, totalPages, reportStats });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
