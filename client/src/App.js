@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProtectedRoute, Navbar } from "./components";
 
-import { Dashboard, Login, NewReport } from "./pages";
+import { Contract, Dashboard, Login, NewReport } from "./pages";
 
 function App() {
   return (
@@ -17,6 +17,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route
+          path="/contract"
+          element={
+            <ProtectedRoute>
+              <Contract />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/create"
           element={
             <ProtectedRoute>
@@ -24,7 +32,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/dashboard"
           element={
