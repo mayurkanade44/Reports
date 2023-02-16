@@ -14,7 +14,7 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg">
         <div className="container">
           <div className="mobile-nav">
-            <Link to="/" className="navbar-brand">
+            <Link to="/create" className="navbar-brand">
               <img src={report} alt="report" />
               Reports
             </Link>

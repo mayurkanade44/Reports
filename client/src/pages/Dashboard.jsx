@@ -260,7 +260,7 @@ const Dashboard = () => {
                 label="Role:"
                 name="role"
                 value={role}
-                data={["Select", "Field", "Back Office"]}
+                data={["Select", "Back Office", "Operator"]}
                 handleChange={(e) =>
                   dispatch(
                     handleUserChange({

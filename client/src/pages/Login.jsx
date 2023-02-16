@@ -18,9 +18,14 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      setTimeout(() => {
-        navigate("/home");
-      }, 1000);
+      if (user.role === "Operator")
+        setTimeout(() => {
+          navigate("/create");
+        }, 500);
+      else
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 500);
     }
 
     // eslint-disable-next-line

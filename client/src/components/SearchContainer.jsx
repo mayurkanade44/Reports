@@ -4,6 +4,7 @@ const SearchContainer = ({
   value,
   handleChange,
   placeholder,
+  loading,
 }) => {
   return (
     <form onSubmit={handleSearch}>
@@ -21,7 +22,7 @@ const SearchContainer = ({
           id="basic-addon2"
           type="submit"
         >
-          Search
+          {loading ? "Searching" : "Search"}
         </button>
       </div>
     </form>

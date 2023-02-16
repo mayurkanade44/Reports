@@ -29,6 +29,7 @@ const NewReport = () => {
     search,
     contract,
     directReport,
+    reportLoading,
   } = useSelector((store) => store.report);
   const { templates } = useSelector((store) => store.admin);
   const { user } = useSelector((store) => store.user);
@@ -90,7 +91,9 @@ const NewReport = () => {
     form.append("file", file);
 
     dispatch(createReport(form));
-    setNewReport(false);
+    setTimeout(() => {
+      setNewReport(false);
+    }, 1000);
   };
 
   return showReport ? (
@@ -104,6 +107,7 @@ const NewReport = () => {
               placeholder="Contract Number"
               name="search"
               value={search}
+              loading={reportLoading}
               handleSearch={handleSearch}
               handleChange={(e) =>
                 dispatch(
