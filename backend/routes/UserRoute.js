@@ -9,14 +9,13 @@ import {
 } from "../controllers/UserController.js";
 import { authenticateUser, authorizeUser } from "../middleware/auth.js";
 
-
 router.route("/login").post(loginUser);
 router
   .route("/register")
-  .post(authenticateUser, authorizeUser("Admin"), registerUser);
+  .post(authenticateUser, authorizeUser("Admin", "Back Office"), registerUser);
 router
   .route("/allUser")
-  .get(authenticateUser, authorizeUser("Admin"), allUsers);
+  .get(authenticateUser, authorizeUser("Admin", "Back Office"), allUsers);
 router
   .route("/delete/:id")
   .delete(authenticateUser, authorizeUser("Admin"), deleteUser);
