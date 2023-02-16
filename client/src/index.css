@@ -231,3 +231,7 @@ header .nav-link:hover {
 .new-report {
   bottom: 40%;
 }
+
+.page {
+  min-height: 90vh;
+}

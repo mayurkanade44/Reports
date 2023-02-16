@@ -1,3 +1,5 @@
+import check from "../images/check1.png";
+
 const Table = ({
   user,
   th1,
@@ -61,18 +63,14 @@ const Table = ({
                         opacity: 0,
                       }}
                     />
-                    <span className="btn btn-warning btn-sm">
-                      Upload File
-                    </span>
+                    <span className="btn btn-warning btn-sm">Upload File</span>
                   </label>
                   {item.approved && (
                     <button
                       className="btn btn-info btn-sm"
-                      onClick={(e) =>
-                        handleButton(item._id, item.emailList)
-                      }
+                      onClick={(e) => handleButton(item._id, item.emailList)}
                     >
-                      Send Email
+                      Send Email {item.email && <img src={check} alt="check" style={{width:15,paddingBottom:4, paddingLeft:2}} />}
                     </button>
                   )}
                 </td>

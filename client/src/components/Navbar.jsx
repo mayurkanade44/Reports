@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../redux/userSlice";
-import menu from "./menu.png";
-import report from "./report.png";
+import menu from "../images/menu.png";
+import report from "../images/report.png";
 const Navbar = () => {
   const [expand, setExpand] = useState(false);
   const { user } = useSelector((store) => store.user);
@@ -52,7 +52,7 @@ const Navbar = () => {
                   ))}
                 <li className="nav-item">
                   <Link
-                    to="/create-report"
+                    to="/create"
                     className="nav-link text-center"
                     aria-current="page"
                     onClick={() => {

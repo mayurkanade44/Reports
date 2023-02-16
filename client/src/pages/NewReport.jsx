@@ -51,7 +51,8 @@ const NewReport = () => {
 
   useEffect(() => {
     dispatch(getAdminValues());
-
+    setShowReport(false);
+    setNewReport(false);
     // eslint-disable-next-line
   }, []);
 

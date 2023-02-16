@@ -29,6 +29,7 @@ export const register = createAsyncThunk(
 export const login = createAsyncThunk("user/login", async (form, thunkAPI) => {
   try {
     const res = await authFetch.post("/user/login", form);
+    thunkAPI.dispatch(clearValues());
     return res.data;
   } catch (error) {
     console.log(error);

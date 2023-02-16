@@ -150,6 +150,7 @@ const reportSlice = createSlice({
         state.details = [];
         state.contract = null;
         state.search = "";
+        state.directUpload = false;
       })
       .addCase(createReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
@@ -173,7 +174,7 @@ const reportSlice = createSlice({
       .addCase(allReports.fulfilled, (state, { payload }) => {
         state.reportLoading = false;
         state.reports = payload.reports;
-        state.reportsStats = payload.reportStats
+        state.reportsStats = payload.reportStats;
         state.totalPages = payload.totalPages;
       })
       .addCase(allReports.rejected, (state, { payload }) => {

@@ -34,7 +34,7 @@ const Login = () => {
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
-        <div className="row d-flex flex-column min-vh-100 justify-content-center align-items-center">
+        <div className="row d-flex flex-column page mx-2 justify-content-center align-items-center">
           <div className="col-md-4">
             <InputRow
               label="Email:"
@@ -67,7 +67,7 @@ const Login = () => {
               }}
             />
           </div>
-          <div className="col-md-2 text-center mt-2">
+          <div className="col-md-4 mt-2">
             <button
               className="btn btn-primary"
               type="submit"
