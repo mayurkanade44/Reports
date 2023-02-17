@@ -145,12 +145,8 @@ const reportSlice = createSlice({
         state.reportLoading = true;
       })
       .addCase(createReport.fulfilled, (state, { payload }) => {
-        state.reportLoading = false;
         toast.success(payload.msg, { autoClose: 1000 });
-        state.details = [];
-        state.contract = null;
-        state.search = "";
-        state.directUpload = false;
+        return { ...state, ...initialState };
       })
       .addCase(createReport.rejected, (state, { payload }) => {
         state.reportLoading = false;

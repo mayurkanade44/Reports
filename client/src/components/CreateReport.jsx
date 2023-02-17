@@ -111,7 +111,7 @@ const CreateReport = () => {
     next();
     setTimeout(() => {
       setLastPage(true);
-    }, 1000);
+    }, 500);
   };
 
   if (adminLoading) return <Loading />;

@@ -7,6 +7,7 @@ import { reportHandleChange, createReport } from "../redux/reportSlice";
 
 const NewReport = () => {
   const {
+    reportLoading,
     reportName,
     templateType,
     reportType,
@@ -39,8 +40,14 @@ const NewReport = () => {
   useEffect(() => {
     dispatch(getAdminValues());
     setShowReport(false);
+    if (!contract) {
+      setTimeout(() => {
+        navigate("/contract");
+      }, 500);
+    }
+
     // eslint-disable-next-line
-  }, []);
+  }, [contract]);
 
   const startReport = () => {
     const name = "reportName";
@@ -59,7 +66,7 @@ const NewReport = () => {
     dispatch(reportHandleChange({ name, value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
 
@@ -72,7 +79,7 @@ const NewReport = () => {
     form.set("inspectionDate", inspectionDate);
     form.append("file", file);
 
-    dispatch(createReport(form))
+    dispatch(createReport(form));
   };
 
   return showReport ? (
@@ -104,8 +111,12 @@ const NewReport = () => {
         <input type="file" onChange={(e) => setFile(e.target.files[0])} />
       </div>
       <div className="col-md-4 text-center">
-        <button className="btn btn-primary" type="submit">
-          Submit Report
+        <button
+          className="btn btn-primary"
+          type="submit"
+          disabled={reportLoading ? true : false}
+        >
+          {reportLoading ? "Uploading" : "Submit Report"}
         </button>
       </div>
     </form>
