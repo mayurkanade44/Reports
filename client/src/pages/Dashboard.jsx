@@ -38,6 +38,7 @@ const Dashboard = () => {
     totalPages,
     page,
   } = useSelector((store) => store.report);
+  const { adminLoading } = useSelector((store) => store.admin);
   const ref = useRef();
   const dispatch = useDispatch();
   const [show, setShow] = useState("All Reports");
@@ -94,7 +95,7 @@ const Dashboard = () => {
     dispatch(sendEmail({ emailList, emails, mailId }));
   };
 
-  const addTemplate = (e) => {
+  const addTemplate = async (e) => {
     e.preventDefault();
 
     const form1 = new FormData();
@@ -103,11 +104,9 @@ const Dashboard = () => {
     form1.set("reportType", form.report);
     form1.append("file", form.doc);
 
-    dispatch(addAdminValues(form1));
-    setTimeout(() => {
-      ref.current.value = "";
-      setForm({ template: "", report: "", doc: "" });
-    }, 500);
+    await dispatch(addAdminValues(form1));
+    ref.current.value = "";
+    setForm({ template: "", report: "", doc: "" });
   };
 
   const handleFile = (id, file) => {
@@ -320,7 +319,7 @@ const Dashboard = () => {
                   "Select",
                   "Single Picture",
                   "Double Picture",
-                  "Before/After Picture",
+                  "Before-After Picture",
                 ]}
                 handleChange={(e) =>
                   setForm({ ...form, template: e.target.value })
@@ -349,8 +348,9 @@ const Dashboard = () => {
               <button
                 className=" btn btn-primary"
                 disabled={form.doc ? false : true}
+                type="submit"
               >
-                Add
+                {adminLoading ? "Adding..." : "Add"}
               </button>
             </div>
           </form>

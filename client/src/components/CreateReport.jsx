@@ -68,7 +68,7 @@ const CreateReport = () => {
     dispatch(uploadImage(form));
   };
 
-  const next = () => {
+  const next = async () => {
     if (reportType === "RIM") formValue.pest = "Rodent";
     if (image1) formValue.image1 = image1;
     if (image2) formValue.image2 = image2;
@@ -80,11 +80,9 @@ const CreateReport = () => {
       formValue.suggestion = other.suggest;
       dispatch(addAdminValues({ suggestion: other.suggest }));
     }
-    dispatch(addPage({ formValue }));
-    setTimeout(() => {
-      setFormValue(initialState);
-      ref.current.value = "";
-    }, 1000);
+    await dispatch(addPage({ formValue }));
+    setFormValue(initialState);
+    ref.current.value = "";
   };
 
   const handleSubmit = (e) => {
@@ -205,7 +203,7 @@ const CreateReport = () => {
             </div>
             <div className="col-md-6 mt-3 mb-2 d-flex">
               <h4 className="img me-1">
-                {templateType === "Before/After Pictures" ? "Before" : "Image1"}
+                {templateType === "Before-After Picture" ? "Before" : "Image1"}
               </h4>
               <input
                 type="file"
@@ -218,7 +216,7 @@ const CreateReport = () => {
               {templateType !== "Single Picture" && (
                 <>
                   <h4 className="img me-1">
-                    {templateType === "Before/After Pictures"
+                    {templateType === "Before-After Picture"
                       ? "After"
                       : "Image2"}
                   </h4>

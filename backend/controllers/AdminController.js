@@ -10,9 +10,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export const addValues = async (req, res) => {
   const { finding, suggestion } = req.body;
   try {
-    if (finding) await Admin.create({ finding });
-    if (suggestion) await Admin.create({ suggestion });
-    if (req.files.file) {
+    if (finding) {
+      await Admin.create({ finding });
+      return res.status(201);
+    } else if (suggestion) {
+      await Admin.create({ suggestion });
+      return res.status(201);
+    } else if (req.files.file) {
       const docFile = req.files.file;
       const docPath = path.join(__dirname, "../files/" + `${docFile.name}`);
       await docFile.mv(docPath);
@@ -29,7 +33,7 @@ export const addValues = async (req, res) => {
       };
       await Admin.create({ template });
     }
-    res.status(201).json({ msg: "File/Comment Added Successfully" });
+    res.status(201).json({ msg: "File Added Successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -56,5 +60,3 @@ export const getValues = async (req, res) => {
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };
-
-

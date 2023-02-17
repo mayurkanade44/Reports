@@ -33,8 +33,8 @@ const NewReport = () => {
   }
   const tempTypes = [
     "Single Picture",
-    "Double Pictures",
-    "Before/After Pictures",
+    "Double Picture",
+    "Before-After Picture",
   ];
 
   useEffect(() => {

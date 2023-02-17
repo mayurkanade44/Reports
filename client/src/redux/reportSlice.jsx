@@ -120,6 +120,7 @@ const reportSlice = createSlice({
       state.details.push(formValue);
       state.image1 = null;
       state.image2 = null;
+      toast.success("Page Added", { autoClose: 1000 });
     },
     reportHandleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
