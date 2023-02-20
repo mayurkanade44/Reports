@@ -5,8 +5,9 @@ import fileUpload from "express-fileupload";
 import { v2 as cloudinary } from "cloudinary";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import path from "path";
 import morgan from "morgan";
+import path from "path";
+import cors from "cors";
 
 const app = express();
 dotenv.config();
@@ -35,6 +36,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // app.get("*", (req, res) => {
 //   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 // });
+
 
 app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
