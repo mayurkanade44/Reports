@@ -21,7 +21,7 @@ const initialState = {
   details: [],
   reports: [],
   search: "",
-  reportsStats: {},
+  reportsStats: [],
   directReport: false,
   mailId: "",
   emailList: [],
@@ -171,7 +171,7 @@ const reportSlice = createSlice({
       .addCase(allReports.fulfilled, (state, { payload }) => {
         state.reportLoading = false;
         state.reports = payload.reports;
-        state.reportsStats = payload.reportStats;
+        state.reportsStats = payload.stats;
         state.totalPages = payload.totalPages;
       })
       .addCase(allReports.rejected, (state, { payload }) => {

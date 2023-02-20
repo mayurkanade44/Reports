@@ -70,7 +70,18 @@ const Table = ({
                       className="btn btn-info btn-sm"
                       onClick={(e) => handleButton(item._id, item.emailList)}
                     >
-                      Send Email {item.email && <img src={check} alt="check" style={{width:15,paddingBottom:4, paddingLeft:2}} />}
+                      Send Email
+                      {item.email && (
+                        <img
+                          src={check}
+                          alt="check"
+                          style={{
+                            width: 15,
+                            paddingBottom: 4,
+                            paddingLeft: 2,
+                          }}
+                        />
+                      )}
                     </button>
                   )}
                 </td>

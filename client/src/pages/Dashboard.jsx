@@ -55,22 +55,6 @@ const Dashboard = () => {
     // eslint-disable-next-line
   }, [page]);
 
-  const stats = [
-    { bg: "secondary", count: reportsStats.reports, text: "Number Of Reports" },
-    {
-      bg: "danger",
-      count: reportsStats.reports - reportsStats.approved,
-      text: "Pending For Approval",
-    },
-    { bg: "success", count: reportsStats.approved, text: "Reports Approved" },
-
-    {
-      bg: "danger",
-      count: reportsStats.reports - reportsStats.email,
-      text: "Email Not Sent",
-    },
-  ];
-
   const handleDelete = (id) => {
     dispatch(userDelete(id));
   };
@@ -184,7 +168,7 @@ const Dashboard = () => {
             </div>
           </div>
         ) : (
-          <ReportStats data={stats} />
+          <ReportStats data={reportsStats} />
         )}
         {show === "All Users" && (
           <>

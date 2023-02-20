@@ -184,11 +184,29 @@ export const allReports = async (req, res) => {
     const approved = allReports.filter((item) => item.approved === true).length;
     const email = allReports.filter((item) => item.email === true).length;
 
-    const reportStats = {
-      reports: allReports.length,
-      approved: approved,
-      email: email,
-    };
+    const stats = [
+      {
+        bg: "secondary",
+        count: allReports.length,
+        text: "Number Of Reports",
+      },
+      {
+        bg: "danger",
+        count: allReports.length - approved,
+        text: "Pending For Approval",
+      },
+      {
+        bg: "success",
+        count: approved,
+        text: "Reports Approved",
+      },
+
+      {
+        bg: "danger",
+        count: allReports.length - email,
+        text: "Email Not Sent",
+      },
+    ];
 
     let repo = Report.find(searchObject)
       .sort("-createdAt")
@@ -210,7 +228,7 @@ export const allReports = async (req, res) => {
       (await Report.countDocuments(searchObject)) / pageLimit
     );
 
-    return res.status(200).json({ reports, totalPages, reportStats });
+    return res.status(200).json({ reports, totalPages, stats });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

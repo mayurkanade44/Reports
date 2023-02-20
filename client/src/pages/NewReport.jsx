@@ -28,21 +28,26 @@ const NewReport = () => {
   const navigate = useNavigate();
   const repoType = [];
 
-  for (let temp of templates) {
-    if (!repoType.includes(temp.reportType)) repoType.push(temp.reportType);
-  }
   const tempTypes = [
     "Single Picture",
     "Double Picture",
     "Before-After Picture",
   ];
 
+  templates.map(
+    (item) =>
+      item.reportType &&
+      !repoType.includes(item.reportType) &&
+      repoType.push(item.reportType)
+  );
+
   useEffect(() => {
     dispatch(getAdminValues());
-    setShowReport(false);
+
     if (!contract) {
       setTimeout(() => {
         navigate("/contract");
+        setShowReport(false);
       }, 500);
     }
 
