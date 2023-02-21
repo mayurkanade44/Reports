@@ -41,7 +41,11 @@ const RIM = ({
   const next = async () => {
     if (reportType === "RIM") formValue.pest = "Rodent";
     if (image1) formValue.image1 = image1;
-    if (image2) formValue.image2 = image2;
+    if (image2) {
+      formValue.image2 = image2;
+    } else {
+      if (templateType === "Before-After Picture") formValue.image2 = "mayur";
+    }
     if (finding === "Other") {
       formValue.finding = other.find;
       dispatch(addAdminValues({ finding: other.find }));
