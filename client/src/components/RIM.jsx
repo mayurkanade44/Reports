@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { InputRow, InputSelect, Loading } from ".";
-import { useDispatch, useSelector } from "react-redux";
-import { addPage, createReport, uploadImage } from "../redux/reportSlice";
+import { useDispatch } from "react-redux";
+import { InputRow, InputSelect } from ".";
 import { addAdminValues } from "../redux/adminSlice";
+import { addPage } from "../redux/reportSlice";
 
 const initialState = {
   pest: "",
@@ -13,60 +13,27 @@ const initialState = {
   suggestion: "",
 };
 
-const CreateReport = () => {
-  const {
-    reportLoading,
-    image1,
-    image2,
-    meetTo,
-    meetContact,
-    meetEmail,
-    shownTo,
-    shownContact,
-    shownEmail,
-    inspectionDate,
-    contract,
-    reportName,
-    details,
-    reportType,
-    templateType,
-  } = useSelector((store) => store.report);
-  const { adminLoading, findings, suggestions } = useSelector(
-    (store) => store.admin
-  );
-  const { user } = useSelector((store) => store.user);
-  const [lastPage, setLastPage] = useState(false);
-  const [formValue, setFormValue] = useState(initialState);
+const RIM = ({
+  handleSubmit,
+  reportType,
+  findings,
+  suggestions,
+  handleImage1,
+  handleImage2,
+  templateType,
+  image1,
+  image2,
+  reportLoading,
+  setLastPage, 
+  lastPage
+}) => {
   const [other, setOther] = useState({ find: "", suggest: "" });
-  const { pest, floor, subFloor, location, finding, suggestion } = formValue;
-  const ref = useRef();
 
+  const ref = useRef();
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValue({ ...formValue, [name]: value });
-  };
-
-  const handleImage1 = (e) => {
-    const image = e.target.files[0];
-
-    const form = new FormData();
-    form.set("imageCount", "image1");
-    form.append("image", image);
-
-    dispatch(uploadImage(form));
-  };
-
-  const handleImage2 = (e) => {
-    const image = e.target.files[0];
-
-    const form = new FormData();
-    form.set("imageCount", "image2");
-    form.append("image", image);
-
-    dispatch(uploadImage(form));
-  };
+  const [formValue, setFormValue] = useState(initialState);
+  const { pest, floor, subFloor, location, finding, suggestion } = formValue;
 
   const next = async () => {
     if (reportType === "RIM") formValue.pest = "Rodent";
@@ -84,24 +51,9 @@ const CreateReport = () => {
     setFormValue(initialState);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(
-      createReport({
-        reportName,
-        templateType,
-        reportType,
-        meetTo,
-        meetContact,
-        meetEmail,
-        shownTo,
-        shownContact,
-        shownEmail,
-        inspectionDate,
-        details,
-        contract,
-      })
-    );
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValue({ ...formValue, [name]: value });
   };
 
   const handleLastPage = () => {
@@ -111,13 +63,9 @@ const CreateReport = () => {
     }, 500);
   };
 
-  if (adminLoading) return <Loading />;
   return (
     <form onSubmit={handleSubmit}>
       <div className="container row my-3">
-        <h5 className="text-center">
-          {!lastPage ? "New Report" : "Report Summary"}
-        </h5>
         {!lastPage ? (
           <>
             {reportType !== "RIM" && (
@@ -266,25 +214,18 @@ const CreateReport = () => {
             </div>
           </>
         ) : (
-          <>
-            <div className="col-md-6 my-3">
-              <h4>Report Name - {reportName}</h4>
-              <h4>Report Pages - {details.length + 2}</h4>
-              <h4>Report By - {user.name}</h4>
-            </div>
-            <div className="col-md-6 d-flex justify-content-center mt-5">
-              <button
-                className="btn btn-success mt"
-                type="submit"
-                disabled={reportLoading || details.length === 0 ? true : false}
-              >
-                {reportLoading ? "Generating Report..." : "Generate Report"}
-              </button>
-            </div>
-          </>
+          <div className="col-md-6 d-flex justify-content-center mt-5">
+            <button
+              className="btn btn-success mt"
+              type="submit"
+              disabled={reportLoading ? true : false}
+            >
+              {reportLoading ? "Generating Report..." : "Generate Report"}
+            </button>
+          </div>
         )}
       </div>
     </form>
   );
 };
-export default CreateReport;
+export default RIM;
