@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loading, RIM } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { createReport, uploadImage } from "../redux/reportSlice";
+import { useNavigate } from "react-router-dom";
 
 const CreateReport = () => {
   const {
@@ -28,6 +29,13 @@ const CreateReport = () => {
   const [lastPage, setLastPage] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!contract) navigate("/newReport");
+
+    // eslint-disable-next-line
+  }, []);
 
   const handleImage1 = (e) => {
     const image = e.target.files[0];
@@ -71,32 +79,24 @@ const CreateReport = () => {
 
   if (adminLoading) return <Loading />;
   return (
-    <div className="container row my-3">
-      <h5 className="text-center">
-        {!lastPage ? "New Report" : "Report Summary"}
-      </h5>
-      {lastPage ? (
-        <div className="col-md-6 my-3">
-          <h4>Report Name - {reportName}</h4>
-          <h4>Report Pages - {details.length + 2}</h4>
-          <h4>Report By - {user.name}</h4>
-        </div>
-      ) : (
-        <RIM
-          handleSubmit={handleSubmit}
-          reportType={reportType}
-          findings={findings}
-          suggestions={suggestions}
-          handleImage1={handleImage1}
-          handleImage2={handleImage2}
-          templateType={templateType}
-          image1={image1}
-          image2={image2}
-          reportLoading={reportLoading}
-          lastPage={lastPage}
-          setLastPage={setLastPage}
-        />
-      )}
+    <div className="container">
+      <RIM
+        handleSubmit={handleSubmit}
+        reportType={reportType}
+        findings={findings}
+        suggestions={suggestions}
+        handleImage1={handleImage1}
+        handleImage2={handleImage2}
+        templateType={templateType}
+        image1={image1}
+        image2={image2}
+        reportLoading={reportLoading}
+        lastPage={lastPage}
+        setLastPage={setLastPage}
+        reportName={reportName}
+        details={details}
+        user={user}
+      />
     </div>
   );
 };

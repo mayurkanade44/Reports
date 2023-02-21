@@ -24,8 +24,11 @@ const RIM = ({
   image1,
   image2,
   reportLoading,
-  setLastPage, 
-  lastPage
+  setLastPage,
+  lastPage,
+  reportName,
+  details,
+  user,
 }) => {
   const [other, setOther] = useState({ find: "", suggest: "" });
 
@@ -47,6 +50,7 @@ const RIM = ({
       formValue.suggestion = other.suggest;
       dispatch(addAdminValues({ suggestion: other.suggest }));
     }
+    ref.current.value = "";
     await dispatch(addPage({ formValue }));
     setFormValue(initialState);
   };
@@ -66,6 +70,9 @@ const RIM = ({
   return (
     <form onSubmit={handleSubmit}>
       <div className="container row my-3">
+        <h5 className="text-center">
+          {!lastPage ? "New Report" : "Report Summary"}
+        </h5>
         {!lastPage ? (
           <>
             {reportType !== "RIM" && (
@@ -181,7 +188,8 @@ const RIM = ({
                 type="button"
                 className="btn btn-primary"
                 disabled={
-                  templateType === "Single Picture"
+                  templateType === "Single Picture" ||
+                  templateType === "Before-After Picture"
                     ? image1 === null
                       ? true
                       : false
@@ -214,15 +222,22 @@ const RIM = ({
             </div>
           </>
         ) : (
-          <div className="col-md-6 d-flex justify-content-center mt-5">
-            <button
-              className="btn btn-success mt"
-              type="submit"
-              disabled={reportLoading ? true : false}
-            >
-              {reportLoading ? "Generating Report..." : "Generate Report"}
-            </button>
-          </div>
+          <>
+            <div className="col-md-6 my-3">
+              <h4>Report Name - {reportName}</h4>
+              <h4>Report Pages - {details.length + 2}</h4>
+              <h4>Report By - {user.name}</h4>
+            </div>
+            <div className="col-md-6 d-flex justify-content-center mt-5">
+              <button
+                className="btn btn-success mt"
+                type="submit"
+                disabled={reportLoading || details.length === 0 ? true : false}
+              >
+                {reportLoading ? "Generating Report..." : "Generate Report"}
+              </button>
+            </div>
+          </>
         )}
       </div>
     </form>
