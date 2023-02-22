@@ -33,6 +33,7 @@ const RIM = ({
   const [other, setOther] = useState({ find: "", suggest: "" });
 
   const ref = useRef();
+  const ref1 = useRef();
   const dispatch = useDispatch();
 
   const [formValue, setFormValue] = useState(initialState);
@@ -44,7 +45,8 @@ const RIM = ({
     if (image2) {
       formValue.image2 = image2;
     } else {
-      if (templateType === "Before-After Picture") formValue.image2 = "mayur";
+      formValue.image2 =
+        "https://res.cloudinary.com/epcorn/image/upload/v1674627399/signature/No_Image_Available_ronw0k.jpg";
     }
     if (finding === "Other") {
       formValue.finding = other.find;
@@ -54,7 +56,10 @@ const RIM = ({
       formValue.suggestion = other.suggest;
       dispatch(addAdminValues({ suggestion: other.suggest }));
     }
-    ref.current.value = "";
+
+    if (ref) ref.current.value = "";
+    if (ref1.current) ref1.current.value = "";
+
     await dispatch(addPage({ formValue }));
     setFormValue(initialState);
   };
@@ -65,7 +70,7 @@ const RIM = ({
   };
 
   const handleLastPage = () => {
-    next();
+    if (image1) next();
     setTimeout(() => {
       setLastPage(true);
     }, 500);
@@ -181,7 +186,7 @@ const RIM = ({
                   <input
                     type="file"
                     accept="image/*"
-                    ref={ref}
+                    ref={ref1}
                     onChange={handleImage2}
                   />
                 </>
@@ -211,17 +216,8 @@ const RIM = ({
                 type="button"
                 className="btn btn-success"
                 onClick={handleLastPage}
-                disabled={
-                  templateType === "Single Picture"
-                    ? image1 === null
-                      ? true
-                      : false
-                    : image2 === null
-                    ? true
-                    : false
-                }
               >
-                Add Last Page
+                Finish
               </button>
             </div>
           </>

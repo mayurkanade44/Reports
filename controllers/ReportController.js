@@ -280,10 +280,10 @@ export const sendEmail = async (req, res) => {
     await report.save();
 
     const emailData = {
-      date: new Date(),
+      inspectionDate: new Date(),
       reportName: report.reportName,
-      email: emailTo,
-      reportBy: report.inspectionBy,
+      email: emailTo.toString(),
+      inspectionBy: report.inspectionBy,
     };
 
     await Admin.create({ emailData });

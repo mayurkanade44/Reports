@@ -38,7 +38,7 @@ const Dashboard = () => {
     totalPages,
     page,
   } = useSelector((store) => store.report);
-  const { adminLoading } = useSelector((store) => store.admin);
+  const { adminLoading, emailData } = useSelector((store) => store.admin);
   const ref = useRef();
   const dispatch = useDispatch();
   const [show, setShow] = useState("All Reports");
@@ -183,10 +183,11 @@ const Dashboard = () => {
               </div>
             )}
             <Table
-              th1="Date"
-              th2="Report Name"
-              th3="Email ids"
-              th4="Report By"
+              th1="Report Name"
+              th2="Report By"
+              th3="Send Date"
+              th4="Email Ids"
+              data={emailData}
             />
           </>
         )}
