@@ -37,7 +37,7 @@ export const createReport = async (req, res) => {
       req.body.inspectionBy = req.user.name;
       req.body.approved = true;
       await Report.create(req.body);
-      return res.status(201).json({ msg: "Report successfully generated." });
+      return res.status(201).json({ msg: "Report successfully uploaded." });
     }
 
     let emailList = contract.billToEmails.concat(contract.shipToEmails);
@@ -45,6 +45,18 @@ export const createReport = async (req, res) => {
     if (shownEmail.length > 0) emailList.push(shownEmail);
 
     const adminValues = await Admin.find();
+
+    const newReport = await Report.create({
+      reportName,
+      reportType,
+      templateType,
+      meetTo,
+      shownTo,
+      inspectionBy: req.user.name,
+      inspectionDate,
+      details,
+      emailList,
+    });
 
     let file = "",
       width = 16;
@@ -111,18 +123,8 @@ export const createReport = async (req, res) => {
 
     fs.unlinkSync(`./files/${reportName}.docx`);
 
-    await Report.create({
-      reportName,
-      reportType,
-      templateType,
-      meetTo,
-      shownTo,
-      inspectionBy: req.user.name,
-      inspectionDate,
-      details,
-      link: result.secure_url,
-      emailList,
-    });
+    newReport.link = result.secure_url;
+    await newReport.save();
 
     res.status(201).json({ msg: "Report successfully generated." });
   } catch (error) {
@@ -270,6 +272,7 @@ export const sendEmail = async (req, res) => {
         fileName: report.reportName,
         name: req.user.name,
         subject: report.reportType,
+        inspectionBy: report.inspectionBy,
       },
       template_id: "d-0e9f59c886f84dd7ba895e0a3390697e",
       attachments: attach,
