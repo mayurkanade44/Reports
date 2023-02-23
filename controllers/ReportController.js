@@ -152,14 +152,6 @@ export const generateReport = async (req, res) => {
 
     const adminValues = await Admin.find();
 
-    const contract = {
-      number: "Reports",
-      billToName: "Reports Dummy",
-      shipToName: "Reports Dummy",
-      billToAddress: "Reports Dummy",
-      shipToAddress: "Reports Dummy",
-    };
-
     let file = "",
       width = 16;
     adminValues.forEach((x) => {
@@ -192,7 +184,7 @@ export const generateReport = async (req, res) => {
         shownEmail: report.shownDetails.email,
         inspectionBy: report.inspectionBy,
         inspectionDate: report.inspectionDate,
-        contract: contract,
+        contract: report.contract,
         data: report.details,
         image: async (url) => {
           const resp = await axios.get(url, {
