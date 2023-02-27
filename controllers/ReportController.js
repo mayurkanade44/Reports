@@ -282,8 +282,7 @@ export const editReport = async (req, res) => {
     if (!report) return res.status(404).json({ msg: "Report not found" });
 
     if (req.files.file) {
-      const link = await uploadFile(req.files.file);
-      report.link = link;
+      report.link = await uploadFile(req.files.file);
       report.approved = true;
       await report.save();
     }
@@ -367,6 +366,7 @@ export const sendEmail = async (req, res) => {
       responseType: "arraybuffer",
     });
     const base64File = Buffer.from(result.data, "binary").toString("base64");
+
     const attachObj = {
       content: base64File,
       filename: `${report.reportName}.${fileType}`,
@@ -419,16 +419,28 @@ export const sendEmail = async (req, res) => {
 
 export const uploadFile = async (file) => {
   try {
-    const docFile = file;
-    const docPath = path.join(__dirname, "../files/" + `${docFile.name}`);
-    await docFile.mv(docPath);
-    const result = await cloudinary.uploader.upload(`files/${docFile.name}`, {
-      resource_type: "raw",
-      use_filename: true,
-      folder: "reports",
-    });
-    fs.unlinkSync(`./files/${docFile.name}`);
-    return result.secure_url;
+    let files = [],
+      links = [];
+
+    if (file.length > 0) files = file;
+    else files.push(file);
+
+    for (let i = 0; i < files.length; i++) {
+      const docFile = files[i];
+      const docPath = path.join(__dirname, "../files/" + `${docFile.name}`);
+      await docFile.mv(docPath);
+
+      const result = await cloudinary.uploader.upload(`files/${docFile.name}`, {
+        resource_type: "raw",
+        use_filename: true,
+        folder: "reports",
+      });
+
+      links.push(result.secure_url);
+      fs.unlinkSync(`./files/${docFile.name}`);
+    }
+
+    return links;
   } catch (error) {
     console.log(error);
     return error;

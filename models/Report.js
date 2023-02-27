@@ -11,7 +11,7 @@ const ReportSchema = new mongoose.Schema(
     inspectionDate: { type: String, required: true },
     contract: { type: Object, required: true },
     details: [],
-    link: { type: String },
+    link: [String],
     approved: { type: Boolean, default: false },
     email: { type: Boolean, default: false },
     emailList: [String],

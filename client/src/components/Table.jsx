@@ -45,14 +45,14 @@ const Table = ({
                 <td>{item.inspectionBy}</td>
                 <td>{item.inspectionDate.split("T")[0]}</td>
                 <td>
-                  {item.link ? (
+                  {item.link && item.link.length > 0 ? (
                     <>
                       <button
                         className="btn btn-primary btn-sm me-3"
                         type="button"
                       >
                         <a
-                          href={item.link}
+                          href={item.link[0]}
                           style={{
                             textDecoration: "none",
                             color: "whitesmoke",
@@ -65,8 +65,9 @@ const Table = ({
                         <input
                           type="file"
                           onChange={(e) =>
-                            handleFile(item._id, e.target.files[0])
+                            handleFile(item._id, e.target.files)
                           }
+                          multiple
                           style={{
                             width: 0,
                             height: 0,
