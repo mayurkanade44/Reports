@@ -7,6 +7,7 @@ import {
   Loading,
   SearchContainer,
   ReportStats,
+  EmailTable,
 } from "../components";
 import { addAdminValues, getAdminValues } from "../redux/adminSlice";
 import {
@@ -188,12 +189,8 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-            <Table
+            <EmailTable
               user={user}
-              th1="Report Name"
-              th2="Report By"
-              th3="Send Date"
-              th4="Email Ids"
               data={emailData}
             />
           </>
