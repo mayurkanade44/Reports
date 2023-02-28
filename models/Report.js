@@ -11,9 +11,10 @@ const ReportSchema = new mongoose.Schema(
     inspectionDate: { type: String, required: true },
     contract: { type: Object, required: true },
     details: [],
-    link: [String],
+    link: { type: String },
+    quotation: { type: String },
     approved: { type: Boolean, default: false },
-    email: { type: Boolean, default: false },
+    email: { type: Boolean, default: false }, //for checking email sent
     emailList: [String],
   },
   { timestamps: true }

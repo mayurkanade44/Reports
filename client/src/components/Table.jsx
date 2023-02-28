@@ -45,14 +45,14 @@ const Table = ({
                 <td>{item.inspectionBy}</td>
                 <td>{item.inspectionDate.split("T")[0]}</td>
                 <td>
-                  {item.link && item.link.length > 0 ? (
+                  {item.link ? (
                     <>
                       <button
                         className="btn btn-primary btn-sm me-3"
                         type="button"
                       >
                         <a
-                          href={item.link[0]}
+                          href={item.link}
                           style={{
                             textDecoration: "none",
                             color: "whitesmoke",
@@ -65,9 +65,12 @@ const Table = ({
                         <input
                           type="file"
                           onChange={(e) =>
-                            handleFile(item._id, e.target.files)
+                            handleFile(
+                              item._id,
+                              e.target.files[0],
+                              "Upload Report"
+                            )
                           }
-                          multiple
                           style={{
                             width: 0,
                             height: 0,
@@ -76,7 +79,28 @@ const Table = ({
                           }}
                         />
                         <span className="btn btn-warning btn-sm">
-                          Upload File
+                          Upload Report
+                        </span>
+                      </label>
+                      <label className="me-3">
+                        <input
+                          type="file"
+                          onChange={(e) =>
+                            handleFile(
+                              item._id,
+                              e.target.files[0],
+                              "Upload Quotation"
+                            )
+                          }
+                          style={{
+                            width: 0,
+                            height: 0,
+                            overflow: "hidden",
+                            opacity: 0,
+                          }}
+                        />
+                        <span className="btn btn-secondary btn-sm">
+                          Upload Quotation
                         </span>
                       </label>
                       {item.approved && (

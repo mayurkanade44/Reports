@@ -99,14 +99,11 @@ const Dashboard = () => {
     setForm({ template: "", report: "", doc: "" });
   };
 
-  const handleFile = (id, files) => {
-    console.log(files);
-    const file = Array.from(files);
+  const handleFile = (id, file, name) => {
     const form = new FormData();
 
-    file.forEach((image) => {
-      form.append("file", image);
-    });
+    if (name === "Upload Report") form.append("file", file);
+    else if (name === "Upload Quotation") form.append("quotation", file);
 
     dispatch(editReport({ id, form }));
   };

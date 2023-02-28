@@ -287,6 +287,12 @@ export const editReport = async (req, res) => {
       await report.save();
     }
 
+    if (req.files.quotation) {
+      report.quotation = await uploadFile(req.files.quotation);
+      report.approved = true;
+      await report.save();
+    }
+
     return res.status(200).json({ msg: "Report has been updated" });
   } catch (error) {
     console.log(error);
@@ -419,28 +425,16 @@ export const sendEmail = async (req, res) => {
 
 export const uploadFile = async (file) => {
   try {
-    let files = [],
-      links = [];
-
-    if (file.length > 0) files = file;
-    else files.push(file);
-
-    for (let i = 0; i < files.length; i++) {
-      const docFile = files[i];
-      const docPath = path.join(__dirname, "../files/" + `${docFile.name}`);
-      await docFile.mv(docPath);
-
-      const result = await cloudinary.uploader.upload(`files/${docFile.name}`, {
-        resource_type: "raw",
-        use_filename: true,
-        folder: "reports",
-      });
-
-      links.push(result.secure_url);
-      fs.unlinkSync(`./files/${docFile.name}`);
-    }
-
-    return links;
+    const docFile = file;
+    const docPath = path.join(__dirname, "../files/" + `${docFile.name}`);
+    await docFile.mv(docPath);
+    const result = await cloudinary.uploader.upload(`files/${docFile.name}`, {
+      resource_type: "raw",
+      use_filename: true,
+      folder: "reports",
+    });
+    fs.unlinkSync(`./files/${docFile.name}`);
+    return result.secure_url;
   } catch (error) {
     console.log(error);
     return error;
