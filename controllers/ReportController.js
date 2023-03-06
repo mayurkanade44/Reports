@@ -32,7 +32,8 @@ export const createReport = async (req, res) => {
 
     if (templateType === "Direct" && req.files.file) {
       const link = await uploadFile(req.files.file);
-      req.body.emailList = ["clientproxymail@gmail.com"];
+      // if (req.files.quot) req.body.quotation = await uploadFile(req.files.quot);
+      req.body.emailList = contract.split(",");
       req.body.contract = { name: "Direct" };
       req.body.link = link;
       req.body.inspectionBy = shownTo;
