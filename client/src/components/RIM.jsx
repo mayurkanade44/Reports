@@ -18,6 +18,7 @@ const RIM = ({
   reportType,
   findings,
   suggestions,
+  services,
   handleImage1,
   handleImage2,
   templateType,
@@ -81,7 +82,7 @@ const RIM = ({
         </h5>
         {!lastPage ? (
           <>
-            {reportType !== "RIM" && (
+            {reportType === "Inspection" && (
               <div className="col-md-6">
                 <InputRow
                   label="Pest:"
@@ -119,46 +120,72 @@ const RIM = ({
                 handleChange={handleChange}
               />
             </div>
-            <div className="col-md-6">
-              <InputSelect
-                label="Findings:"
-                name="finding"
-                value={finding}
-                data={["Select", ...findings, "Other"]}
-                handleChange={handleChange}
-              />
-              {finding === "Other" && (
-                <InputRow
-                  label="Finding"
-                  type="text"
-                  name="otherFinding"
-                  value={other.find}
-                  handleChange={(e) =>
-                    setOther({ ...other, find: e.target.value })
-                  }
-                />
-              )}
-            </div>
-            <div className="col-md-6">
-              <InputSelect
-                label="Suggestions:"
-                name="suggestion"
-                value={suggestion}
-                data={["Select", ...suggestions, "Other"]}
-                handleChange={handleChange}
-              />
-              {suggestion === "Other" && (
-                <InputRow
-                  label="Suggestions"
-                  type="text"
-                  name="otherFinding"
-                  value={other.suggest}
-                  handleChange={(e) =>
-                    setOther({ ...other, suggest: e.target.value })
-                  }
-                />
-              )}
-            </div>
+            {reportType === "RIM" && (
+              <>
+                <div className="col-md-6">
+                  <InputSelect
+                    label="Findings:"
+                    name="finding"
+                    value={finding}
+                    data={["Select", ...findings, "Other"]}
+                    handleChange={handleChange}
+                  />
+                  {finding === "Other" && (
+                    <InputRow
+                      label="Finding"
+                      type="text"
+                      name="otherFinding"
+                      value={other.find}
+                      handleChange={(e) =>
+                        setOther({ ...other, find: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+                <div className="col-md-6">
+                  <InputSelect
+                    label="Suggestions:"
+                    name="suggestion"
+                    value={suggestion}
+                    data={["Select", ...suggestions, "Other"]}
+                    handleChange={handleChange}
+                  />
+                  {suggestion === "Other" && (
+                    <InputRow
+                      label="Suggestions"
+                      type="text"
+                      name="otherFinding"
+                      value={other.suggest}
+                      handleChange={(e) =>
+                        setOther({ ...other, suggest: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+              </>
+            )}
+            {reportType === "Work Done" && (
+              <>
+                <div className="col-md-6">
+                  <InputSelect
+                    label="Treatment:"
+                    name="finding"
+                    value={finding}
+                    data={["Select", ...services]}
+                    handleChange={handleChange}
+                  />
+                </div>
+                {/* <div className="col-md-6">
+                  <InputSelect
+                    label="Comments:"
+                    name="suggestion"
+                    value={suggestion}
+                    data={["Select", ...suggestions, "Other"]}
+                    handleChange={handleChange}
+                  />
+                </div> */}
+              </>
+            )}
             <div className="col-md-6 mt-3 mb-2 d-flex">
               <h4 className="img me-1">
                 {templateType === "Before-After Picture" ? "Before" : "Image1"}

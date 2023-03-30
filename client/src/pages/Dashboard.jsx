@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import {
   Table,
   InputRow,
@@ -47,6 +48,7 @@ const Dashboard = () => {
     template: "",
     report: "",
     doc: "",
+    services: "",
   });
 
   useEffect(() => {
@@ -97,7 +99,15 @@ const Dashboard = () => {
 
     await dispatch(addAdminValues(form1));
     ref.current.value = "";
-    setForm({ template: "", report: "", doc: "" });
+    setForm({ template: "", report: "", doc: "", services: "" });
+  };
+
+  const addService = async (e) => {
+    e.preventDefault();
+
+    await dispatch(addAdminValues({ services: form.services }));
+    toast.success("Service Added")
+    setForm({ template: "", report: "", doc: "", services: "" });
   };
 
   const handleFile = (id, file, name) => {
@@ -319,50 +329,76 @@ const Dashboard = () => {
           </form>
         )}
         {show === "Add Template" && (
-          <form onSubmit={addTemplate}>
-            <div className="col-4 my-3">
-              <InputSelect
-                label="Template:"
-                value={form.template}
-                data={[
-                  "Select",
-                  "Single Picture",
-                  "Double Picture",
-                  "Before-After Picture",
-                ]}
-                handleChange={(e) =>
-                  setForm({ ...form, template: e.target.value })
-                }
-              />
-            </div>
-            <div className="col-4 my-3">
-              <InputRow
-                label="Report Type"
-                type="text"
-                value={form.report}
-                placeholder="Report Name"
-                handleChange={(e) =>
-                  setForm({ ...form, report: e.target.value })
-                }
-              />
-            </div>
-            <div className="col-2">
-              <input
-                type="file"
-                ref={ref}
-                onChange={(e) => setForm({ ...form, doc: e.target.files[0] })}
-              />
-            </div>
-            <div className="col-2" style={{ marginTop: 22 }}>
-              <button
-                className=" btn btn-primary"
-                disabled={form.doc ? false : true}
-                type="submit"
-              >
-                {adminLoading ? "Adding..." : "Add"}
-              </button>
-            </div>
-          </form>
+          <>
+            <form onSubmit={addTemplate}>
+              <div className="col-4 my-3">
+                <InputSelect
+                  label="Template:"
+                  value={form.template}
+                  data={[
+                    "Select",
+                    "Single Picture",
+                    "Double Picture",
+                    "Before-After Picture",
+                  ]}
+                  handleChange={(e) =>
+                    setForm({ ...form, template: e.target.value })
+                  }
+                />
+              </div>
+              <div className="col-4 my-3">
+                <InputRow
+                  label="Report Type"
+                  type="text"
+                  value={form.report}
+                  placeholder="Report Name"
+                  handleChange={(e) =>
+                    setForm({ ...form, report: e.target.value })
+                  }
+                />
+              </div>
+              <div className="col-2">
+                <input
+                  type="file"
+                  ref={ref}
+                  onChange={(e) => setForm({ ...form, doc: e.target.files[0] })}
+                />
+              </div>
+              <div className="col-2" style={{ marginTop: 22 }}>
+                <button
+                  className=" btn btn-success"
+                  disabled={form.doc ? false : true}
+                  type="submit"
+                >
+                  {adminLoading ? "Adding..." : "Add Template"}
+                </button>
+              </div>
+            </form>
+            <hr className="my-3" />
+            <form action="submit" className="row" onSubmit={addService}>
+              <div className="col-5">
+                <InputRow
+                  label="Service Name"
+                  type="text"
+                  value={form.services}
+                  placeholder="Service Name"
+                  handleChange={(e) =>
+                    setForm({ ...form, services: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="col-2" style={{ marginTop: 5 }}>
+                <button
+                  className=" btn btn-primary"
+                  disabled={form.services ? false : true}
+                  type="submit"
+                >
+                  {adminLoading ? "Adding..." : "Add Service"}
+                </button>
+              </div>
+            </form>
+          </>
         )}
       </div>
     </div>

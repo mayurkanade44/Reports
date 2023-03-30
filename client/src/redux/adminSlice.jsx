@@ -8,6 +8,7 @@ const initialState = {
   suggestions: [],
   templates: [],
   emailData: [],
+  services: [],
 };
 
 export const getAdminValues = createAsyncThunk(
@@ -52,6 +53,7 @@ const adminSlice = createSlice({
         state.suggestions = payload.suggestions;
         state.templates = payload.templates;
         state.emailData = payload.emailData;
+        state.services = payload.services;
       })
       .addCase(addAdminValues.pending, (state) => {
         state.adminLoading = true;
