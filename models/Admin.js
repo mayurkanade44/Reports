@@ -4,6 +4,7 @@ const AdminSchema = new mongoose.Schema({
   finding: { type: String },
   suggestion: { type: String },
   template: { type: Object },
+  services: { type: String },
   emailData: { type: Object },
 });
 
