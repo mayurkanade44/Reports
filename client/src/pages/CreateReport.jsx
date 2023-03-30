@@ -22,7 +22,7 @@ const CreateReport = () => {
     reportType,
     templateType,
   } = useSelector((store) => store.report);
-  const { adminLoading, findings, suggestions, services } = useSelector(
+  const { adminLoading, findings, suggestions, services, comments } = useSelector(
     (store) => store.admin
   );
   const { user } = useSelector((store) => store.user);
@@ -86,6 +86,7 @@ const CreateReport = () => {
         findings={findings}
         suggestions={suggestions}
         services={services}
+        comments={comments}
         handleImage1={handleImage1}
         handleImage2={handleImage2}
         templateType={templateType}

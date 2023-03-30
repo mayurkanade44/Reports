@@ -5,6 +5,7 @@ const AdminSchema = new mongoose.Schema({
   suggestion: { type: String },
   template: { type: Object },
   services: { type: String },
+  comment: { type: String },
   emailData: { type: Object },
 });
 
