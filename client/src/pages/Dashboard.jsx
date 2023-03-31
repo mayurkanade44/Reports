@@ -106,7 +106,7 @@ const Dashboard = () => {
     e.preventDefault();
 
     await dispatch(addAdminValues({ services: form.services }));
-    toast.success("Service Added")
+    toast.success("Service Added");
     setForm({ template: "", report: "", doc: "", services: "" });
   };
 

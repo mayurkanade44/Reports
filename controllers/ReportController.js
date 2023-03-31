@@ -77,74 +77,6 @@ export const createReport = async (req, res) => {
       emailList,
     });
 
-    // let file = "",
-    //   width = 16;
-    // adminValues.forEach((x) => {
-    //   if (
-    //     x.template &&
-    //     x.template.templateType === templateType &&
-    //     x.template.reportType === reportType
-    //   ) {
-    //     file = x.template.file;
-    //   }
-    // });
-
-    // const resp = await axios.get(file, {
-    //   responseType: "arraybuffer",
-    // });
-    // const template = Buffer.from(resp.data);
-
-    // if (templateType !== "Single Picture") width = 8;
-
-    // const buffer = await newdoc.createReport({
-    //   cmdDelimiter: ["{", "}"],
-    //   template,
-
-    //   additionalJsContext: {
-    //     meetTo: meetTo,
-    //     meetContact: meetContact,
-    //     meetEmail: meetEmail,
-    //     shownTo: shownTo,
-    //     shownContact: shownContact,
-    //     shownEmail: shownEmail,
-    //     inspectionBy: req.user.name,
-    //     inspectionDate: inspectionDate,
-    //     contract: contract,
-    //     data: details,
-    //     image: async (url) => {
-    //       const resp = await axios.get(url, {
-    //         responseType: "arraybuffer",
-    //       });
-    //       const buffer = Buffer.from(resp.data, "binary").toString("base64");
-    //       return {
-    //         width: width,
-    //         height: 9,
-    //         data: buffer,
-    //         extension: ".jpg",
-    //       };
-    //     },
-    //   },
-    // });
-
-    // fs.writeFileSync(
-    //   path.resolve(__dirname, "../files/", `${reportName}.docx`),
-    //   buffer
-    // );
-
-    // const result = await cloudinary.uploader.upload(
-    //   `files/${reportName}.docx`,
-    //   {
-    //     resource_type: "raw",
-    //     use_filename: true,
-    //     folder: "reports",
-    //   }
-    // );
-
-    // fs.unlinkSync(`./files/${reportName}.docx`);
-
-    // newReport.link = result.secure_url;
-    // await newReport.save();
-
     res.status(201).json({ msg: "Report successfully saved." });
   } catch (error) {
     console.log(error);
@@ -211,7 +143,7 @@ export const generateReport = async (req, res) => {
           const buffer = Buffer.from(resp.data, "binary").toString("base64");
           return {
             width: width,
-            height: 9,
+            height: 11,
             data: buffer,
             extension: ".jpg",
           };
