@@ -136,7 +136,7 @@ const Dashboard = () => {
         </div>
         <div className="col-2">
           <button
-            className="btn btn-primary"
+            className="btn btn-dark"
             onClick={(e) => setShow(e.target.textContent)}
           >
             All Users
@@ -152,7 +152,7 @@ const Dashboard = () => {
         </div>
         <div className="col-2">
           <button
-            className="btn btn-primary"
+            className="btn btn-dark"
             onClick={(e) => setShow(e.target.textContent)}
           >
             Add Template

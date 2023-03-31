@@ -5,7 +5,7 @@ import { addAdminValues } from "../redux/adminSlice";
 import { addPage } from "../redux/reportSlice";
 
 const initialState = {
-  pest: "Rodent",
+  pest: "",
   floor: "",
   subFloor: "",
   location: "",
@@ -61,6 +61,7 @@ const RIM = ({
       formValue.comment = other.comment;
       dispatch(addAdminValues({ comment: other.comment }));
     }
+    if (reportType === "RIM") formValue.pest = "Rodent";
 
     await dispatch(addPage({ formValue }));
 
@@ -85,11 +86,11 @@ const RIM = ({
     <form onSubmit={handleSubmit}>
       <div className="container row my-3">
         <h5 className="text-center">
-          {!lastPage ? "New Report" : "Report Summary"}
+          {!lastPage ? `${reportType} Report` : "Report Summary"}
         </h5>
         {!lastPage ? (
           <>
-            {reportType === "Inspection" && (
+            {reportType === "Pest Audit" && (
               <div className="col-md-6">
                 <InputRow
                   label="Pest:"
@@ -127,7 +128,7 @@ const RIM = ({
                 handleChange={handleChange}
               />
             </div>
-            {reportType === "RIM" && (
+            {(reportType === "RIM" || reportType === "Pest Audit") && (
               <>
                 <div className="col-md-6">
                   <InputSelect
