@@ -1,3 +1,4 @@
+import FileSaver from "file-saver";
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -61,6 +62,20 @@ const Dashboard = () => {
 
   const handleDelete = (id) => {
     dispatch(userDelete(id));
+  };
+
+  const downloadMultipleFiles = ({ link, quotation }) => {
+    const fileUrls = [link];
+    if (quotation) fileUrls.push(quotation);
+
+    fileUrls.forEach((url) => {
+      fetch(url)
+        .then((res) => res.blob())
+        .then((blob) => {
+          FileSaver.saveAs(blob, url.split("/").pop());
+        })
+        .catch((error) => console.log(error));
+    });
   };
 
   const handleRegisterSubmit = (e) => {
@@ -234,6 +249,7 @@ const Dashboard = () => {
               th3="Inspection Date"
               th4="Actions"
               data={reports}
+              handleDownload={downloadMultipleFiles}
               handleButton={handleMailForm}
               handleFile={handleFile}
               handleGenerate={handleGenerate}

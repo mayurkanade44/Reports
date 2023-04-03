@@ -273,7 +273,7 @@ export const allReports = async (req, res) => {
     let repo = Report.find(searchObject)
       .sort("-createdAt")
       .select(
-        "reportName reportType inspectionBy inspectionDate link approved email emailList"
+        "reportName reportType inspectionBy inspectionDate link approved email emailList quotation"
       );
     // if (req.user.role === "Field") {
     //   reports = reports.filter((item) => item.inspectionBy === req.user.name);

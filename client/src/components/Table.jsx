@@ -10,6 +10,7 @@ const Table = ({
   handleButton,
   handleFile,
   handleGenerate,
+  handleDownload,
 }) => {
   return (
     <table className="table table-striped-columns table-bordered mt-2">
@@ -54,16 +55,14 @@ const Table = ({
                       <button
                         className="btn btn-primary btn-sm me-3"
                         type="button"
+                        onClick={() =>
+                          handleDownload({
+                            link: item.link,
+                            quotation: item.quotation,
+                          })
+                        }
                       >
-                        <a
-                          href={item.link}
-                          style={{
-                            textDecoration: "none",
-                            color: "whitesmoke",
-                          }}
-                        >
-                          Download
-                        </a>
+                        Download
                       </button>
                       <label className="me-3">
                         <input
