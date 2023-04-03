@@ -101,7 +101,7 @@ export const generateReport = async (req, res) => {
     const adminValues = await Admin.find();
 
     let file = "",
-      width = 16;
+      width = 18;
     adminValues.forEach((x) => {
       if (
         x.template &&
@@ -117,7 +117,7 @@ export const generateReport = async (req, res) => {
     });
     const template = Buffer.from(resp.data);
 
-    if (report.templateType !== "Single Picture") width = 8;
+    if (report.templateType !== "Single Picture") width = 9;
 
     const buffer = await newdoc.createReport({
       cmdDelimiter: ["{", "}"],
@@ -143,7 +143,7 @@ export const generateReport = async (req, res) => {
           const buffer = Buffer.from(resp.data, "binary").toString("base64");
           return {
             width: width,
-            height: 11,
+            height: 13,
             data: buffer,
             extension: ".jpg",
           };
@@ -353,8 +353,6 @@ export const sendEmail = async (req, res) => {
     if (emails.length > 0) {
       emailTo = emailTo.concat(emails.split(","));
     }
-
-   
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const msg = {
