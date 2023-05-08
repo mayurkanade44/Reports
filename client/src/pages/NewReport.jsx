@@ -40,7 +40,6 @@ const NewReport = () => {
     shipToEmails: [],
   });
   const [file, setFile] = useState("");
-  const [quotation, setQuotation] = useState("");
   const navigate = useNavigate();
   const repoType = [];
 
@@ -113,7 +112,6 @@ const NewReport = () => {
     );
     form.set("inspectionDate", inspectionDate);
     form.append("file", file);
-    // form.append("quot", quotation);
 
     dispatch(createReport(form));
   };
