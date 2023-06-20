@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { InputRow, InputSelect } from ".";
 import { addAdminValues } from "../redux/adminSlice";
-import { addNewPage, addPage, reportHandleChange } from "../redux/reportSlice";
+import { addNewPage, reportHandleChange } from "../redux/reportSlice";
 import ImageEditor from "./ImageEditor";
 import { useParams } from "react-router-dom";
 import FinalReport from "./FinalReport";
@@ -18,14 +18,11 @@ const initialState = {
 };
 
 const RIM = ({
-  handleSubmit,
   reportType,
   findings,
   suggestions,
   comments,
   services,
-  handleImage1,
-  handleImage2,
   templateType,
   image1,
   image2,
@@ -33,18 +30,15 @@ const RIM = ({
   setLastPage,
   lastPage,
   reportName,
-  details,
   user,
 }) => {
   const [other, setOther] = useState({ find: "", suggest: "", comment: "" });
   const [imageModal, setImageModal] = useState({ show: false, name: "" });
+  const [formValue, setFormValue] = useState(initialState);
+  
   const { id } = useParams();
-
-  const ref = useRef();
-  const ref1 = useRef();
   const dispatch = useDispatch();
 
-  const [formValue, setFormValue] = useState(initialState);
   const { pest, floor, subFloor, location, finding, suggestion, comment } =
     formValue;
 
@@ -76,12 +70,6 @@ const RIM = ({
         dispatch(reportHandleChange({ name: "image2", value: null }));
         setFormValue(initialState);
       });
-
-    // await dispatch(addPage({ formValue }));
-
-    // if (ref) ref.current.value = "";
-    // if (ref1.current) ref1.current.value = "";
-    // setFormValue(initialState);
   };
 
   const handleChange = (e) => {
@@ -231,12 +219,6 @@ const RIM = ({
                   ? "Before:"
                   : "Image1:"}
               </h4>
-              {/* <input
-                type="file"
-                accept="image/*"
-                ref={ref}
-                onChange={handleImage1}
-              /> */}
               <button
                 className={`btn ${
                   image1 ? "btn-success" : "btn-primary"
@@ -255,12 +237,6 @@ const RIM = ({
                       ? "After:"
                       : "Image2:"}
                   </h4>
-                  {/* <input
-                    type="file"
-                    accept="image/*"
-                    ref={ref1}
-                    onChange={handleImage2}
-                  /> */}
                   <button
                     className={`btn ${
                       image2 ? "btn-success" : "btn-primary"

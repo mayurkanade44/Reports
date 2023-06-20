@@ -1,15 +1,33 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getReportDetails, submitReport } from "../redux/reportSlice";
+import {
+  clearReport,
+  getReportDetails,
+  submitReport,
+} from "../redux/reportSlice";
 import Loading from "./Loading";
+import { useNavigate } from "react-router-dom";
 
 const FinalReport = ({ id, name }) => {
   const { singleReport, reportLoading } = useSelector((store) => store.report);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getReportDetails(id));
+
+    // eslint-disable-next-line
   }, [id]);
+
+  const handleSubmit = async () => {
+    try {
+      await dispatch(submitReport(id)).unwrap();
+      dispatch(clearReport());
+      navigate("/newReport");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (reportLoading) return <Loading />;
 
@@ -23,7 +41,7 @@ const FinalReport = ({ id, name }) => {
       <div className="col-md-6 d-flex justify-content-center mt-5">
         <button
           className="btn btn-success mt"
-          onClick={() => dispatch(submitReport(id))}
+          onClick={handleSubmit}
           disabled={
             reportLoading || isNaN(singleReport.details?.length) ? true : false
           }

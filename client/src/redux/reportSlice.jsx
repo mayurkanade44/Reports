@@ -83,19 +83,6 @@ export const generateReport = createAsyncThunk(
   }
 );
 
-export const uploadImage = createAsyncThunk(
-  "report/imgUpload",
-  async (form, thunkAPI) => {
-    try {
-      const res = await authFetch.post("/report/uploadImage", form);
-      return res.data;
-    } catch (error) {
-      console.log(error);
-      return thunkAPI.rejectWithValue(error.response.data.msg);
-    }
-  }
-);
-
 export const editReport = createAsyncThunk(
   "report/edit",
   async ({ id, form }, thunkAPI) => {
@@ -153,11 +140,11 @@ export const contractDetails = createAsyncThunk(
   }
 );
 
-export const testUpload = createAsyncThunk(
+export const imageUpload = createAsyncThunk(
   "report/testUpload",
   async (form, thunkAPI) => {
     try {
-      const res = await authFetch.post(`/report/testUpload`, form);
+      const res = await authFetch.post(`/report/uploadImage`, form);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -196,12 +183,6 @@ const reportSlice = createSlice({
   name: "report",
   initialState,
   reducers: {
-    addPage: (state, { payload: { formValue } }) => {
-      state.details.push(formValue);
-      state.image1 = null;
-      state.image2 = null;
-      toast.success("Page Added", { autoClose: 1000 });
-    },
     reportHandleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
@@ -253,20 +234,6 @@ const reportSlice = createSlice({
       })
       .addCase(addNewPage.rejected, (state, { payload }) => {
         state.reportLoading = false;
-        toast.error(payload);
-      })
-      .addCase(uploadImage.pending, (state) => {
-        state.reportLoading = true;
-        toast.info("Image Uploading");
-      })
-      .addCase(uploadImage.fulfilled, (state, { payload }) => {
-        state.reportLoading = false;
-        if (payload.imageCount === "image1") state.image1 = payload.link;
-        else if (payload.imageCount === "image2") state.image2 = payload.link;
-      })
-      .addCase(uploadImage.rejected, (state, { payload }) => {
-        state.reportLoading = false;
-        console.log(payload);
         toast.error(payload);
       })
       .addCase(allReports.pending, (state) => {
@@ -328,14 +295,15 @@ const reportSlice = createSlice({
         state.reportLoading = false;
         toast.error(payload);
       })
-      .addCase(testUpload.pending, (state) => {
+      .addCase(imageUpload.pending, (state) => {
         state.reportLoading = true;
+        toast.info("Image Uploading");
       })
-      .addCase(testUpload.fulfilled, (state, { payload }) => {
+      .addCase(imageUpload.fulfilled, (state, { payload }) => {
         state.reportLoading = false;
         toast.success(payload.msg, { autoClose: 1000 });
       })
-      .addCase(testUpload.rejected, (state, { payload }) => {
+      .addCase(imageUpload.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload, { autoClose: 1000 });
       })
@@ -366,7 +334,6 @@ const reportSlice = createSlice({
 });
 
 export const {
-  addPage,
   reportHandleChange,
   mailForm,
   changePage,

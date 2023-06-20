@@ -59,7 +59,7 @@ export const getValues = async (req, res) => {
       if (value.comment && value.comment !== null) comments.push(value.comment);
     }
 
-    res.status(201).json({
+    res.status(200).json({
       findings,
       suggestions,
       templates,

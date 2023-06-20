@@ -7,17 +7,16 @@ import {
   createReport,
   editReport,
   generateReport,
+  imageUpload,
   newReport,
   reportDetails,
   sendEmail,
   submitReport,
-  testUpload,
-  uploadImages,
 } from "../controllers/ReportController.js";
 import { authorizeUser } from "../middleware/auth.js";
 
 router.route("/create").post(createReport);
-router.route("/uploadImage").post(uploadImages);
+router.route("/uploadImage").post(imageUpload);
 router
   .route("/allReports")
   .get(authorizeUser("Admin", "Back Office"), allReports);
@@ -30,6 +29,5 @@ router
   .route("/editReport/:id")
   .patch(authorizeUser("Admin", "Back Office"), editReport);
 router.route("/generate/:id").get(generateReport);
-router.route("/testUpload").post(testUpload);
 
 export default router;

@@ -310,31 +310,31 @@ export const generateReport = async (req, res) => {
   }
 };
 
-export const uploadImages = async (req, res) => {
-  try {
-    const result = await cloudinary.uploader.upload(
-      req.files.image.tempFilePath,
-      {
-        use_filename: true,
-        folder: "reports",
-        quality: 30,
-        width: 800,
-      }
-    );
-    fs.unlinkSync(req.files.image.tempFilePath);
+// export const uploadImages = async (req, res) => {
+//   try {
+//     const result = await cloudinary.uploader.upload(
+//       req.files.image.tempFilePath,
+//       {
+//         use_filename: true,
+//         folder: "reports",
+//         quality: 30,
+//         width: 800,
+//       }
+//     );
+//     fs.unlinkSync(req.files.image.tempFilePath);
 
-    return res.status(201).json({
-      msg: "ok",
-      link: result.secure_url,
-      imageCount: req.body.imageCount,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ msg: "Server error, try again later" });
-  }
-};
+//     return res.status(201).json({
+//       msg: "ok",
+//       link: result.secure_url,
+//       imageCount: req.body.imageCount,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({ msg: "Server error, try again later" });
+//   }
+// };
 
-export const testUpload = async (req, res) => {
+export const imageUpload = async (req, res) => {
   try {
     const result = await cloudinary.uploader.upload(req.body.image, {
       use_filename: true,
