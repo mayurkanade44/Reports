@@ -55,6 +55,19 @@ export const newReport = createAsyncThunk(
   }
 );
 
+export const addNewPage = createAsyncThunk(
+  "newReport/addPage",
+  async ({ formValue, id }, thunkAPI) => {
+    try {
+      const res = await authFetch.patch(`/report/newReport/${id}`, formValue);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
 export const generateReport = createAsyncThunk(
   "report/generate",
   async (id, thunkAPI) => {
@@ -164,6 +177,7 @@ const reportSlice = createSlice({
     reportHandleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
+    setImageData: (state, payload) => {},
 
     mailForm: (state, { payload: { id, emails } }) => {
       state.mailId = id;
@@ -195,9 +209,21 @@ const reportSlice = createSlice({
       })
       .addCase(newReport.fulfilled, (state, { payload }) => {
         state.reportId = payload.id;
+        state.reportLoading = false;
         toast.success(payload.msg, { autoClose: 1000 });
       })
       .addCase(newReport.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload);
+      })
+      .addCase(addNewPage.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(addNewPage.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.success(payload.msg, { autoClose: 1000 });
+      })
+      .addCase(addNewPage.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload);
       })
@@ -273,6 +299,17 @@ const reportSlice = createSlice({
       .addCase(generateReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload);
+      })
+      .addCase(testUpload.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(testUpload.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.success(payload.msg, { autoClose: 1000 });
+      })
+      .addCase(testUpload.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload, { autoClose: 1000 });
       });
   },
 });

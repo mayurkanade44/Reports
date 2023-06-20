@@ -8,7 +8,6 @@ import path from "path";
 import { v2 as cloudinary } from "cloudinary";
 import axios from "axios";
 import sgMail from "@sendgrid/mail";
-import { createCanvas, loadImage } from "canvas";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -133,11 +132,47 @@ export const newReport = async (req, res) => {
       inspectionDate,
       contract,
       emailList,
+      user: req.user.userId,
     });
 
-    return res
-      .status(201)
-      .json({ id: newReport._id, msg: "Report successfully saved." });
+    return res.status(201).json({ id: newReport._id, msg: "Report created." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const addPage = async (req, res) => {
+  const { id } = req.params;
+  const {
+    pest,
+    floor,
+    subFloor,
+    location,
+    finding,
+    suggestion,
+    comment,
+    image1,
+    image2,
+  } = req.body;
+  try {
+    const report = await Report.findById(id);
+    if (!report) return res.stats(404).json({ msg: "Report Not Found" });
+
+    report.details.push({
+      pest,
+      floor,
+      subFloor,
+      location,
+      finding,
+      suggestion,
+      comment,
+      image1,
+      image2,
+    });
+    report.save();
+
+    return res.status(200).json({ msg: "Page added" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -278,7 +313,7 @@ export const testUpload = async (req, res) => {
       folder: "reports",
       quality: 50,
     });
-    console.log(result.secure_url);
+    return res.status(200).json({ url: result.secure_url });
   } catch (error) {
     console.log(error);
   }

@@ -16,6 +16,8 @@ const ReportSchema = new mongoose.Schema(
     approved: { type: Boolean, default: false },
     email: { type: Boolean, default: false }, //for checking email sent
     emailList: [String],
+    completed: { type: Boolean, default: false },
+    user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );

@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { InputRow, InputSelect } from ".";
 import { addAdminValues } from "../redux/adminSlice";
-import { addPage } from "../redux/reportSlice";
+import { addNewPage, addPage, reportHandleChange } from "../redux/reportSlice";
 import ImageEditor from "./ImageEditor";
+import { useParams } from "react-router-dom";
 
 const initialState = {
   pest: "",
@@ -35,17 +36,19 @@ const RIM = ({
   user,
 }) => {
   const [other, setOther] = useState({ find: "", suggest: "", comment: "" });
+  const [imageModal, setImageModal] = useState({ show: false, name: "" });
+  const { id } = useParams();
 
   const ref = useRef();
   const ref1 = useRef();
   const dispatch = useDispatch();
 
   const [formValue, setFormValue] = useState(initialState);
-  const [show, setShow] = useState(false);
   const { pest, floor, subFloor, location, finding, suggestion, comment } =
     formValue;
 
-  const next = async () => {
+  const next = async (e) => {
+    e.preventDefault();
     if (!image1) return;
     else formValue.image1 = image1;
     if (templateType !== "Single Picture" && !image2) return;
@@ -65,11 +68,19 @@ const RIM = ({
     }
     if (reportType === "RIM") formValue.pest = "Rodent";
 
-    await dispatch(addPage({ formValue }));
+    dispatch(addNewPage({ formValue, id }))
+      .unwrap()
+      .then((res) => {
+        dispatch(reportHandleChange({ name: "image1", value: null }));
+        dispatch(reportHandleChange({ name: "image2", value: null }));
+        setFormValue(initialState);
+      });
 
-    if (ref) ref.current.value = "";
-    if (ref1.current) ref1.current.value = "";
-    setFormValue(initialState);
+    // await dispatch(addPage({ formValue }));
+
+    // if (ref) ref.current.value = "";
+    // if (ref1.current) ref1.current.value = "";
+    // setFormValue(initialState);
   };
 
   const handleChange = (e) => {
@@ -85,17 +96,17 @@ const RIM = ({
   };
 
   const showClose = () => {
-    setShow(false);
+    setImageModal({ show: false, name: "" });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <div className="container row my-3">
         <h5 className="text-center">
           {!lastPage ? `${reportType} Report` : "Report Summary"}
         </h5>
         {!lastPage ? (
-          <>
+          <form onSubmit={next}>
             {reportType === "Pest Audit" && (
               <div className="col-md-6">
                 <InputRow
@@ -224,11 +235,13 @@ const RIM = ({
                 onChange={handleImage1}
               /> */}
               <button
-                className="btn btn-primary btn-sm"
-                onClick={() => setShow(true)}
+                className={`btn ${
+                  image1 ? "btn-success" : "btn-primary"
+                } btn-sm`}
+                onClick={() => setImageModal({ show: true, name: "image1" })}
                 type="button"
               >
-                Choose File
+                {image1 ? "Image Uploaded" : "Choose File"}
               </button>
             </div>
             <div className="col-md-6 my-2 d-flex">
@@ -246,19 +259,25 @@ const RIM = ({
                     onChange={handleImage2}
                   /> */}
                   <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => setShow(true)}
+                    className={`btn ${
+                      image2 ? "btn-success" : "btn-primary"
+                    } btn-sm`}
+                    onClick={() =>
+                      setImageModal({ show: true, name: "image2" })
+                    }
                     type="button"
                   >
-                    Choose File
+                    {image2 ? "Image Uploaded" : "Choose File"}
                   </button>
                 </>
               )}
             </div>
-            {show && <ImageEditor onClose={showClose} />}
+            {imageModal.show && (
+              <ImageEditor onClose={showClose} name={imageModal.name} />
+            )}
             <div className="col-2 mt-4">
               <button
-                type="button"
+                type="submit"
                 className="btn btn-primary"
                 disabled={
                   templateType === "Single Picture"
@@ -269,7 +288,6 @@ const RIM = ({
                     ? true
                     : false
                 }
-                onClick={next}
               >
                 Next
               </button>
@@ -283,7 +301,7 @@ const RIM = ({
                 Finish
               </button>
             </div>
-          </>
+          </form>
         ) : (
           <>
             <div className="col-md-6 my-3">
@@ -303,7 +321,7 @@ const RIM = ({
           </>
         )}
       </div>
-    </form>
+    </div>
   );
 };
 export default RIM;

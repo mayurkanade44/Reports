@@ -8,6 +8,7 @@ const InputRow = ({
   placeholder,
   width,
   handleChange,
+  required,
 }) => {
   return (
     <div className="row g-3 align-items-center input-row">
@@ -19,7 +20,7 @@ const InputRow = ({
       <div className="col">
         <input
           className="form-control"
-          required
+          required={required}
           type={type}
           placeholder={placeholder}
           name={name}

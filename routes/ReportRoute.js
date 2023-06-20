@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 
 import {
+  addPage,
   allReports,
   createReport,
   editReport,
@@ -21,7 +22,7 @@ router
 router
   .route("/sendEmail")
   .post(authorizeUser("Admin", "Back Office"), sendEmail);
-router.route("/newReport/:id").post(newReport);
+router.route("/newReport/:id").post(newReport).patch(addPage);
 router
   .route("/editReport/:id")
   .patch(authorizeUser("Admin", "Back Office"), editReport);
