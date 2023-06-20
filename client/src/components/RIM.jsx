@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { InputRow, InputSelect } from ".";
 import { addAdminValues } from "../redux/adminSlice";
 import { addPage } from "../redux/reportSlice";
+import ImageEditor from "./ImageEditor";
 
 const initialState = {
   pest: "",
@@ -40,6 +41,7 @@ const RIM = ({
   const dispatch = useDispatch();
 
   const [formValue, setFormValue] = useState(initialState);
+  const [show, setShow] = useState(false);
   const { pest, floor, subFloor, location, finding, suggestion, comment } =
     formValue;
 
@@ -80,6 +82,10 @@ const RIM = ({
     setTimeout(() => {
       setLastPage(true);
     }, 500);
+  };
+
+  const showClose = () => {
+    setShow(false);
   };
 
   return (
@@ -211,12 +217,19 @@ const RIM = ({
                   ? "Before:"
                   : "Image1:"}
               </h4>
-              <input
+              {/* <input
                 type="file"
                 accept="image/*"
                 ref={ref}
                 onChange={handleImage1}
-              />
+              /> */}
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => setShow(true)}
+                type="button"
+              >
+                Choose File
+              </button>
             </div>
             <div className="col-md-6 my-2 d-flex">
               {templateType !== "Single Picture" && (
@@ -226,15 +239,23 @@ const RIM = ({
                       ? "After:"
                       : "Image2:"}
                   </h4>
-                  <input
+                  {/* <input
                     type="file"
                     accept="image/*"
                     ref={ref1}
                     onChange={handleImage2}
-                  />
+                  /> */}
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => setShow(true)}
+                    type="button"
+                  >
+                    Choose File
+                  </button>
                 </>
               )}
             </div>
+            {show && <ImageEditor onClose={showClose} />}
             <div className="col-2 mt-4">
               <button
                 type="button"
