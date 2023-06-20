@@ -8,7 +8,9 @@ import {
   editReport,
   generateReport,
   newReport,
+  reportDetails,
   sendEmail,
+  submitReport,
   testUpload,
   uploadImages,
 } from "../controllers/ReportController.js";
@@ -23,6 +25,7 @@ router
   .route("/sendEmail")
   .post(authorizeUser("Admin", "Back Office"), sendEmail);
 router.route("/newReport/:id").post(newReport).patch(addPage);
+router.route("/reportDetails/:id").patch(submitReport).get(reportDetails);
 router
   .route("/editReport/:id")
   .patch(authorizeUser("Admin", "Back Office"), editReport);

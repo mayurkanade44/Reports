@@ -27,6 +27,7 @@ const initialState = {
   emailList: [],
   totalPages: 1,
   page: 1,
+  singleReport: {},
 };
 
 export const createReport = createAsyncThunk(
@@ -160,6 +161,33 @@ export const testUpload = createAsyncThunk(
       return res.data;
     } catch (error) {
       console.log(error);
+    }
+  }
+);
+
+export const getReportDetails = createAsyncThunk(
+  "report/reportDetails",
+  async (id, thunkAPI) => {
+    try {
+      const res = await authFetch.get(`/report/reportDetails/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const submitReport = createAsyncThunk(
+  "report/submitReport",
+  async (id, thunkAPI) => {
+    try {
+      const res = await authFetch.patch(`/report/reportDetails/${id}`);
+
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
     }
   }
 );
@@ -308,6 +336,29 @@ const reportSlice = createSlice({
         toast.success(payload.msg, { autoClose: 1000 });
       })
       .addCase(testUpload.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload, { autoClose: 1000 });
+      })
+      .addCase(getReportDetails.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(getReportDetails.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        state.singleReport = payload;
+      })
+      .addCase(getReportDetails.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload, { autoClose: 1000 });
+      })
+      .addCase(submitReport.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(submitReport.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        state.singleReport = {};
+        toast.success(payload.msg);
+      })
+      .addCase(submitReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload, { autoClose: 1000 });
       });

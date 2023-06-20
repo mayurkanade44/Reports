@@ -155,6 +155,7 @@ export const addPage = async (req, res) => {
     image1,
     image2,
   } = req.body;
+
   try {
     const report = await Report.findById(id);
     if (!report) return res.stats(404).json({ msg: "Report Not Found" });
@@ -173,6 +174,33 @@ export const addPage = async (req, res) => {
     report.save();
 
     return res.status(200).json({ msg: "Page added" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const reportDetails = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const report = await Report.findById(id);
+    if (!report) return res.stats(404).json({ msg: "Report Not Found" });
+
+    return res.json(report);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const submitReport = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const report = await Report.findById(id);
+    report.completed = true;
+    await report.save();
+
+    return res.status(200).json({ msg: "Report successfully submitted" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -346,7 +374,7 @@ export const editReport = async (req, res) => {
 
 export const allReports = async (req, res) => {
   const { search } = req.query;
-  const searchObject = {};
+  const searchObject = { completed: true };
   try {
     if (search) searchObject.reportName = { $regex: search, $options: "i" };
 

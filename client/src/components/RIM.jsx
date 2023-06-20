@@ -5,6 +5,7 @@ import { addAdminValues } from "../redux/adminSlice";
 import { addNewPage, addPage, reportHandleChange } from "../redux/reportSlice";
 import ImageEditor from "./ImageEditor";
 import { useParams } from "react-router-dom";
+import FinalReport from "./FinalReport";
 
 const initialState = {
   pest: "",
@@ -88,8 +89,10 @@ const RIM = ({
     setFormValue({ ...formValue, [name]: value });
   };
 
-  const handleLastPage = () => {
-    if (image1) next();
+  const handleLastPage = async (e) => {
+    if (image1) {
+      await next(e);
+    }
     setTimeout(() => {
       setLastPage(true);
     }, 500);
@@ -303,22 +306,7 @@ const RIM = ({
             </div>
           </form>
         ) : (
-          <>
-            <div className="col-md-6 my-3">
-              <h4>Report Name - {reportName}</h4>
-              <h4>Report Pages - {details.length + 2}</h4>
-              <h4>Report By - {user.name}</h4>
-            </div>
-            <div className="col-md-6 d-flex justify-content-center mt-5">
-              <button
-                className="btn btn-success mt"
-                type="submit"
-                disabled={reportLoading || details.length === 0 ? true : false}
-              >
-                {reportLoading ? "Submitting..." : "Submit Report"}
-              </button>
-            </div>
-          </>
+          <FinalReport id={id} name={user.name} />
         )}
       </div>
     </div>
