@@ -8,6 +8,7 @@ import path from "path";
 import { v2 as cloudinary } from "cloudinary";
 import axios from "axios";
 import sgMail from "@sendgrid/mail";
+import { createCanvas, loadImage } from "canvas";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -78,6 +79,65 @@ export const createReport = async (req, res) => {
     });
 
     res.status(201).json({ msg: "Report successfully saved." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const newReport = async (req, res) => {
+  const {
+    reportName,
+    templateType,
+    reportType,
+    meetTo,
+    meetContact,
+    shownTo,
+    shownContact,
+    inspectionDate,
+    meetEmail,
+    shownEmail,
+    contract,
+  } = req.body;
+  try {
+    if (!reportName || !templateType || !reportType)
+      return res.status(400).json({ msg: "Please provide all values" });
+
+    let emailList = contract.billToEmails.concat(contract.shipToEmails);
+    if (meetEmail.length > 0) emailList.push(meetEmail);
+    if (shownEmail.length > 0) emailList.push(shownEmail);
+
+    contract.number = capitalLetter(contract.number);
+    contract.billToName = capitalLetter(contract.billToName);
+    contract.shipToName = capitalLetter(contract.shipToName);
+
+    const meetDetails = {
+      name: capitalLetter(meetTo),
+      contact: meetContact,
+      email: meetEmail,
+    };
+
+    const shownDetails = {
+      name: capitalLetter(shownTo),
+      contact: shownContact,
+      email: shownEmail,
+    };
+
+    const newReport = await Report.create({
+      reportName,
+      reportType,
+      templateType,
+      meetDetails,
+      shownDetails,
+      inspectionBy: req.user.name,
+      inspectionDate,
+      contract,
+      emailList,
+    });
+
+    return res
+      .status(201)
+      .json({ id: newReport._id, msg: "Report successfully saved." });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -208,6 +268,19 @@ export const uploadImages = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const testUpload = async (req, res) => {
+  try {
+    const result = await cloudinary.uploader.upload(req.body.image, {
+      use_filename: true,
+      folder: "reports",
+      quality: 50,
+    });
+    console.log(result.secure_url);
+  } catch (error) {
+    console.log(error);
   }
 };
 

@@ -6,6 +6,7 @@ import { authFetch } from "./auth";
 const initialState = {
   reportLoading: false,
   contract: null,
+  reportId: "",
   reportName: "",
   templateType: "",
   reportType: "",
@@ -33,6 +34,19 @@ export const createReport = createAsyncThunk(
   async (form, thunkAPI) => {
     try {
       const res = await authFetch.post("/report/create", form);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const newReport = createAsyncThunk(
+  "newReport/create",
+  async (form, thunkAPI) => {
+    try {
+      const res = await authFetch.post("/report/newReport/1", form);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -125,6 +139,18 @@ export const contractDetails = createAsyncThunk(
   }
 );
 
+export const testUpload = createAsyncThunk(
+  "report/testUpload",
+  async (form, thunkAPI) => {
+    try {
+      const res = await authFetch.post(`/report/testUpload`, form);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const reportSlice = createSlice({
   name: "report",
   initialState,
@@ -161,6 +187,17 @@ const reportSlice = createSlice({
         return { ...state, ...initialState };
       })
       .addCase(createReport.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload);
+      })
+      .addCase(newReport.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(newReport.fulfilled, (state, { payload }) => {
+        state.reportId = payload.id;
+        toast.success(payload.msg, { autoClose: 1000 });
+      })
+      .addCase(newReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload);
       })

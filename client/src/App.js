@@ -24,7 +24,7 @@ function App() {
           }
         />
         <Route
-          path="/create"
+          path="/create/:id"
           element={
             <ProtectedRoute>
               <CreateReport />
