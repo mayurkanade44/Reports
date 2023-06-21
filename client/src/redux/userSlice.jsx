@@ -11,6 +11,7 @@ const initialState = {
   password: "",
   name: "",
   role: "",
+  userReports: [],
 };
 
 export const register = createAsyncThunk(
@@ -52,7 +53,20 @@ export const userDelete = createAsyncThunk(
   "user/delete",
   async (id, thunkAPI) => {
     try {
-      const res = await authFetch.delete(`/user/delete/${id}`);
+      const res = await authFetch.delete(`/user/details/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const userReport = createAsyncThunk(
+  "user/report",
+  async (_, thunkAPI) => {
+    try {
+      const res = await authFetch.get(`/user/details/1`);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -137,6 +151,17 @@ const userSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(userDelete.rejected, (state, { payload }) => {
+        state.userLoading = false;
+        toast.error(payload.msg);
+      })
+      .addCase(userReport.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(userReport.fulfilled, (state, { payload }) => {
+        state.userLoading = false;
+        state.userReports = payload;
+      })
+      .addCase(userReport.rejected, (state, { payload }) => {
         state.userLoading = false;
         toast.error(payload.msg);
       });

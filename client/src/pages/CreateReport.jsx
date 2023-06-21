@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Loading, RIM } from "../components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getAdminValues } from "../redux/adminSlice";
 
 const CreateReport = () => {
   const {
@@ -18,10 +19,12 @@ const CreateReport = () => {
     useSelector((store) => store.admin);
   const { user } = useSelector((store) => store.user);
   const [lastPage, setLastPage] = useState(false);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    dispatch(getAdminValues());
     if (!contract) navigate("/newReport");
 
     // eslint-disable-next-line

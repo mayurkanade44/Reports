@@ -20,7 +20,7 @@ const Login = () => {
     if (user) {
       if (user.role === "Operator")
         setTimeout(() => {
-          navigate("/create");
+          navigate("/newReport");
         }, 500);
       else
         setTimeout(() => {
@@ -35,7 +35,7 @@ const Login = () => {
     <div className="container">
       <form onSubmit={handleSubmit}>
         <div className="row d-flex flex-column page mx-2 justify-content-center align-items-center">
-          <div className="col-md-4">
+          <div className="col-lg-4">
             <InputRow
               label="Email:"
               type="email"
@@ -51,7 +51,7 @@ const Login = () => {
               }}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-lg-4">
             <InputRow
               label="Password:"
               type="password"

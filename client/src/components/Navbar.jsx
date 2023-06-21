@@ -61,9 +61,21 @@ const Navbar = () => {
                     New Report
                   </Link>
                 </li>
-                <li className="nav-item logout">
+                <li className="nav-item">
+                  <Link
+                    to="/my-reports"
+                    className="nav-link text-center"
+                    aria-current="page"
+                    onClick={() => {
+                      setExpand(false);
+                    }}
+                  >
+                    My Reports
+                  </Link>
+                </li>
+                <li className="nav-item ">
                   <button
-                    className="btn nav-link text-center"
+                    className="btn logout nav-link text-center"
                     aria-current="page"
                     onClick={() => {
                       dispatch(logout());

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProtectedRoute, Navbar } from "./components";
-import { Dashboard, Login, NewReport, CreateReport } from "./pages";
+import { Dashboard, Login, NewReport, CreateReport, MyReports } from "./pages";
 
 function App() {
   return (
@@ -36,6 +36,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-reports"
+          element={
+            <ProtectedRoute>
+              <MyReports />
             </ProtectedRoute>
           }
         />
