@@ -339,7 +339,7 @@ export const imageUpload = async (req, res) => {
     const result = await cloudinary.uploader.upload(req.body.image, {
       use_filename: true,
       folder: "reports",
-      quality: 50,
+      width: 800,
     });
     return res.status(200).json({ url: result.secure_url });
   } catch (error) {

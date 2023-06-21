@@ -6,6 +6,7 @@ import {
   deleteUser,
   loginUser,
   registerUser,
+  userReport,
 } from "../controllers/UserController.js";
 import { authenticateUser, authorizeUser } from "../middleware/auth.js";
 
@@ -17,7 +18,8 @@ router
   .route("/allUser")
   .get(authenticateUser, authorizeUser("Admin", "Back Office"), allUsers);
 router
-  .route("/delete/:id")
+  .route("/details/:id")
+  .get(authenticateUser, userReport)
   .delete(authenticateUser, authorizeUser("Admin"), deleteUser);
 
 export default router;

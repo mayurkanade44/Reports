@@ -1,3 +1,4 @@
+import Report from "../models/Report.js";
 import User from "../models/User.js";
 
 export const registerUser = async (req, res) => {
@@ -29,8 +30,9 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ msg: "Invalid email id" });
 
-    const comparePassword = await user.comparePassword(password)
-    if(!comparePassword) return res.status(400).json({msg:"Invalid Password"})
+    const comparePassword = await user.comparePassword(password);
+    if (!comparePassword)
+      return res.status(400).json({ msg: "Invalid Password" });
 
     const token = await user.createJWT();
 
@@ -43,7 +45,6 @@ export const loginUser = async (req, res) => {
       },
       msg: `Welcome ${user.name}`,
     });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -54,6 +55,20 @@ export const allUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
     res.status(200).json({ users });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const userReport = async (req, res) => {
+  try {
+    const reports = await Report.find({
+      user: req.user.userId,
+      completed: false,
+    }).sort("-createdAt");
+
+    return res.json(reports);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

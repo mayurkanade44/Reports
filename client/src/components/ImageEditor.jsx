@@ -41,7 +41,7 @@ const ImageEditor = ({ onClose, name }) => {
           className="btn btn-primary my-2"
           onClick={upload}
         >
-          Save
+          {reportLoading ? "Saving..." : "Save"}
         </button>
         <button type="button" className="btn btn-danger" onClick={onClose}>
           Close
