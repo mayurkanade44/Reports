@@ -19,7 +19,6 @@ const ImageEditor = ({ onClose, name }) => {
 
   const upload = async (args) => {
     try {
-      console.log(args.toolbarType);
       const image = convertImageToBase64(imgObj.getImageData());
       const res = await dispatch(imageUpload({ image })).unwrap();
       dispatch(reportHandleChange({ name, value: res.url }));

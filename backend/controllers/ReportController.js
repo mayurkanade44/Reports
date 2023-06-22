@@ -40,6 +40,7 @@ export const createReport = async (req, res) => {
       req.body.meetDetails = { name: "Direct" };
       req.body.shownDetails = { name: "Direct" };
       req.body.approved = true;
+      req.body.completed = true;
       await Report.create(req.body);
       return res.status(201).json({ msg: "Report successfully uploaded." });
     }

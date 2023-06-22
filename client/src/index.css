@@ -277,14 +277,14 @@ header .nav-link:hover {
 @media (max-width: 767px) {
   .reports-table th {
     font-size: 11px !important;
-    padding: 2px;
+    padding: 5px;
   }
   .reports-table td {
     font-size: 11px !important;
-    padding: 2px;
+    padding: 6px;
   }
   .reports-table .btn {
-    font-size: 11px;
-    padding: 0 5px;
+    font-size: 12px;
+    padding: 1px 7px;
   }
 }
