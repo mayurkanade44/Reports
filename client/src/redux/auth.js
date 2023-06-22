@@ -1,7 +1,9 @@
 import axios from "axios";
 import { clearStore } from "./userSlice";
 
-export const authFetch = axios.create({ baseURL: "/api" });
+export const authFetch = axios.create({
+  baseURL: `${process.env.REACT_APP_URL}/api`,
+});
 
 authFetch.interceptors.request.use((config) => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -11,7 +13,6 @@ authFetch.interceptors.request.use((config) => {
   return config;
 });
 
-
 export const unauthorizedResponse = (error, thunkAPI) => {
   if (error.response.status === 401) {
     thunkAPI.dispatch(clearStore());
@@ -19,4 +20,3 @@ export const unauthorizedResponse = (error, thunkAPI) => {
   }
   return thunkAPI.rejectWithValue(error.response.data.msg);
 };
-

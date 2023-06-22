@@ -1,15 +1,26 @@
 import { ImageEditorComponent } from "@syncfusion/ej2-react-image-editor";
 import { useDispatch, useSelector } from "react-redux";
 import { imageUpload, reportHandleChange } from "../redux/reportSlice";
+import { registerLicense } from "@syncfusion/ej2-base";
+
+registerLicense(process.env.REACT_APP_IMAGE);
 
 const ImageEditor = ({ onClose, name }) => {
   const { reportLoading } = useSelector((store) => store.report);
   const dispatch = useDispatch();
+  const toolbar = ["Annotate", "Rectangle", "Ellipse", "Line"];
   let imgObj;
 
-  const upload = async () => {
-    const image = convertImageToBase64(imgObj.getImageData());
+  const toolbarUpdating = (args) => {
+    if (args.toolbarType === "shapes") {
+      args.toolbarItems = ["strokeColor"];
+    }
+  };
+
+  const upload = async (args) => {
     try {
+      console.log(args.toolbarType);
+      const image = convertImageToBase64(imgObj.getImageData());
       const res = await dispatch(imageUpload({ image })).unwrap();
       dispatch(reportHandleChange({ name, value: res.url }));
       onClose();
@@ -24,7 +35,7 @@ const ImageEditor = ({ onClose, name }) => {
     canvas.height = img.height;
     canvas.width = img.width;
     ctx.putImageData(img, 0, 0);
-    const dataUrl = canvas.toDataURL();
+    const dataUrl = canvas.toDataURL("image/jpeg");
     return dataUrl;
   };
 
@@ -35,6 +46,8 @@ const ImageEditor = ({ onClose, name }) => {
           ref={(img) => {
             imgObj = img;
           }}
+          toolbar={toolbar}
+          toolbarUpdating={toolbarUpdating}
         ></ImageEditorComponent>
         <button
           disabled={reportLoading}
