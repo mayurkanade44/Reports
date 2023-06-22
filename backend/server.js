@@ -33,7 +33,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // only when ready to deploy
 // app.use(express.static(path.resolve(__dirname, "./client/build")));
-
+app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));

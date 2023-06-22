@@ -340,6 +340,7 @@ export const imageUpload = async (req, res) => {
       use_filename: true,
       folder: "reports",
       width: 800,
+      quality: 50,
     });
     return res.status(200).json({ url: result.secure_url });
   } catch (error) {
