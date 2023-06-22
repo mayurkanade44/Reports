@@ -218,10 +218,10 @@ header .nav-link:hover {
     font-size: 12px;
   }
   .logout {
-    display: block !important;
-    text-align: center !important;
+    display: flex;
+    justify-content: center;
   }
-  .follows {
+  .follows {  
     display: none !important;
   }
   .navbar-toggler img {

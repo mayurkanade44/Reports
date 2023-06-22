@@ -73,9 +73,9 @@ const Navbar = () => {
                     My Reports
                   </Link>
                 </li>
-                <li className="nav-item ">
+                <li className="nav-item logout">
                   <button
-                    className="btn logout nav-link text-center"
+                    className="btn nav-link text-center"
                     aria-current="page"
                     onClick={() => {
                       dispatch(logout());
