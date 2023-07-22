@@ -11,6 +11,7 @@ const Table = ({
   handleFile,
   handleGenerate,
   handleDownload,
+  handleDelete,
 }) => {
   return (
     <table className="table table-striped-columns table-bordered mt-2">
@@ -95,6 +96,14 @@ const Table = ({
                         <span className="btn btn-secondary btn-sm">
                           Upload Quotation
                         </span>
+                      </label>
+                      <label className="me-3">
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDelete(item._id)}
+                        >
+                          Delete
+                        </button>
                       </label>
                       {item.approved && (
                         <button

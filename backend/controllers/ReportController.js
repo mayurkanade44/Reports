@@ -311,6 +311,20 @@ export const generateReport = async (req, res) => {
   }
 };
 
+export const deleteReport = async (req, res) => {
+  try {
+    const report = await Report.findById(req.params.id);
+    if (!report) return res.status(404).json({ msg: "Report not found" });
+
+    await report.delete();
+
+    return res.json({ msg: "Report deleted" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
 // export const uploadImages = async (req, res) => {
 //   try {
 //     const result = await cloudinary.uploader.upload(

@@ -5,6 +5,7 @@ import {
   addPage,
   allReports,
   createReport,
+  deleteReport,
   editReport,
   generateReport,
   imageUpload,
@@ -27,7 +28,9 @@ router.route("/newReport/:id").post(newReport).patch(addPage);
 router.route("/reportDetails/:id").patch(submitReport).get(reportDetails);
 router
   .route("/editReport/:id")
-  .patch(authorizeUser("Admin", "Back Office"), editReport);
+  .patch(authorizeUser("Admin", "Back Office"), editReport)
+  .delete(authorizeUser("Admin", "Back Office"), deleteReport);
+
 router.route("/generate/:id").get(generateReport);
 
 export default router;

@@ -15,6 +15,7 @@ import { addAdminValues, getAdminValues } from "../redux/adminSlice";
 import {
   allReports,
   changePage,
+  deleteReport,
   editReport,
   generateReport,
   mailForm,
@@ -62,6 +63,11 @@ const Dashboard = () => {
 
   const handleDelete = (id) => {
     dispatch(userDelete(id));
+  };
+
+  const reportDelete = (id) => {
+    dispatch(deleteReport(id));
+    dispatch(allReports());
   };
 
   const downloadMultipleFiles = ({ link, quotation }) => {
@@ -253,6 +259,7 @@ const Dashboard = () => {
               handleButton={handleMailForm}
               handleFile={handleFile}
               handleGenerate={handleGenerate}
+              handleDelete={reportDelete}
             />
             <nav aria-label="Page navigation example">
               <ul className="pagination">

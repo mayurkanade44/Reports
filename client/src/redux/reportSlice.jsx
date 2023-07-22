@@ -97,6 +97,19 @@ export const editReport = createAsyncThunk(
   }
 );
 
+export const deleteReport = createAsyncThunk(
+  "report/delete",
+  async (id, thunkAPI) => {
+    try {
+      const res = await authFetch.delete(`/report/editReport/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
 export const allReports = createAsyncThunk(
   "report/all",
   async (search, thunkAPI) => {
@@ -327,6 +340,17 @@ const reportSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(submitReport.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload, { autoClose: 1000 });
+      })
+      .addCase(deleteReport.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(deleteReport.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.success(payload.msg);
+      })
+      .addCase(deleteReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload, { autoClose: 1000 });
       });

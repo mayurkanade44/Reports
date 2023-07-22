@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userReport } from "../redux/userSlice";
-import { reportHandleChange } from "../redux/reportSlice";
+import { deleteReport, reportHandleChange } from "../redux/reportSlice";
 import { useNavigate } from "react-router-dom";
+import { Loading } from "../components";
 
 const MyReports = () => {
   const dispatch = useDispatch();
-  const { userReports } = useSelector((store) => store.user);
+  const { userReports, userLoading } = useSelector((store) => store.user);
+  const { reportLoading } = useSelector((store) => store.report);
   const [showDetails, setShowDetails] = useState({
     show: false,
     details: {},
@@ -24,6 +26,11 @@ const MyReports = () => {
     // eslint-disable-next-line
   }, []);
 
+  const handleDelete = async (id) => {
+    await dispatch(deleteReport(id)).unwrap();
+    dispatch(userReport());
+  };
+
   const handleContinue = (report) => {
     dispatch(reportHandleChange({ name: "contract", value: report._id }));
     dispatch(
@@ -39,8 +46,9 @@ const MyReports = () => {
 
   return (
     <div className="container my-3">
+      {(userLoading || reportLoading) && <Loading />}
       <h6 className="text-center text-danger mb-3">
-        {userReports.length
+        {userReports.length > 0
           ? "Uncompleted Reports"
           : "No Uncompleted Report Found"}
       </h6>
@@ -116,25 +124,33 @@ const MyReports = () => {
           <thead>
             <tr>
               <th className="text-center">Name</th>
-              <th className="text-center">Date</th>
-              <th className="text-center">Details</th>
+              <th className="text-center" style={{ width: 80 }}>
+                Date
+              </th>
+              <th className="text-center" style={{ width: 130 }}>
+                Details
+              </th>
             </tr>
           </thead>
           <tbody>
             {userReports?.map((report) => (
               <tr key={report._id}>
                 <td>{report.reportName}</td>
-                <td className="text-center" style={{ width: 100 }}>
-                  {report.inspectionDate}
-                </td>
-                <td className="text-center" style={{ width: 85 }}>
+                <td className="text-center">{report.inspectionDate}</td>
+                <td className="text-center">
                   <button
-                    className="btn btn-sm btn-primary"
+                    className="btn btn-sm btn-primary mx-1"
                     onClick={() =>
                       setShowDetails({ show: true, details: report })
                     }
                   >
                     Details
+                  </button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete(report._id)}
+                  >
+                    Delete
                   </button>
                 </td>
               </tr>
