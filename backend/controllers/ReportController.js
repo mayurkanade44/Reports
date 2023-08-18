@@ -41,6 +41,7 @@ export const createReport = async (req, res) => {
       req.body.shownDetails = { name: "Direct" };
       req.body.approved = true;
       req.body.completed = true;
+      req.body.user = req.user.userId;
       await Report.create(req.body);
       return res.status(201).json({ msg: "Report successfully uploaded." });
     }
