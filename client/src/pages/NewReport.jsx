@@ -279,138 +279,133 @@ const NewReport = () => {
             </>
           ) : (
             <>
-              <div className="col-md-6 mt-5 justify-content-center">
-                <h6 className="text-danger text-center">
-                  If Client Has No Contract Please Provide Below Details.
-                </h6>
-                <div className="col-md-10">
-                  <InputRow
-                    label="Client Name:"
-                    type="text"
-                    name="billToName"
-                    value={newContract.billToName}
-                    handleChange={(e) =>
-                      setNewContract({
-                        ...newContract,
-                        billToName: e.target.value,
-                        number: e.target.value,
-                        shipToName: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="col-md-10">
-                  <h5 htmlFor="floatingTextarea d-inline">Client Address:</h5>
-                  <textarea
-                    className="form-control"
-                    placeholder="Please provide full client address"
-                    name="billToAddress"
-                    value={newContract.billToAddress}
-                    onChange={(e) =>
-                      setNewContract({
-                        ...newContract,
-                        billToAddress: e.target.value,
-                        shipToAddress: e.target.value,
-                      })
-                    }
-                  ></textarea>
-                </div>
-                <div className="d-flex justify-content-center">
-                  <button
-                    className="btn btn-success mt-2"
-                    disabled={
-                      !newContract.billToName || !newContract.billToAddress
-                        ? true
-                        : false
-                    }
-                    onClick={handleContract}
-                  >
-                    Create New Report
-                  </button>
-                </div>
-              </div>
               {(user.role === "Admin" || user.role === "Back Office") && (
-                <div className="col-md-6 mt-5">
-                  <h5 className="text-danger text-center">
-                    If You Want To Upload Direct Report.
-                  </h5>
-                  <form
-                    onSubmit={handleSubmit}
-                    className="d-flex flex-column justify-content-center align-items-center"
-                  >
+                <>
+                  <div className="col-md-6 mt-5 justify-content-center">
+                    <h6 className="text-danger text-center">
+                      If Client Has No Contract Please Provide Below Details.
+                    </h6>
                     <div className="col-md-10">
                       <InputRow
-                        label="Report Name:"
+                        label="Client Name:"
                         type="text"
-                        name="reportName"
-                        value={reportName}
-                        handleChange={handleChange}
+                        name="billToName"
+                        value={newContract.billToName}
+                        handleChange={(e) =>
+                          setNewContract({
+                            ...newContract,
+                            billToName: e.target.value,
+                            number: e.target.value,
+                            shipToName: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div className="col-md-10">
-                      <InputRow
-                        label="Report Type:"
-                        type="text"
-                        name="meetTo"
-                        value={meetTo}
-                        handleChange={handleChange}
-                      />
+                      <h5 htmlFor="floatingTextarea d-inline">
+                        Client Address:
+                      </h5>
+                      <textarea
+                        className="form-control"
+                        placeholder="Please provide full client address"
+                        name="billToAddress"
+                        value={newContract.billToAddress}
+                        onChange={(e) =>
+                          setNewContract({
+                            ...newContract,
+                            billToAddress: e.target.value,
+                            shipToAddress: e.target.value,
+                          })
+                        }
+                      ></textarea>
                     </div>
-                    <div className="col-md-10">
-                      <InputRow
-                        label="Inspection By:"
-                        type="text"
-                        name="shownTo"
-                        value={shownTo}
-                        handleChange={handleChange}
-                      />
-                    </div>
-                    <div className="col-md-10">
-                      <InputRow
-                        label="Inspection Date:"
-                        type="date"
-                        name="inspectionDate"
-                        value={inspectionDate}
-                        handleChange={handleChange}
-                      />
-                    </div>
-                    <div className="col-md-10 my-3">
-                      <label htmlFor="" className="me-2">
-                        <h5>Report: </h5>
-                      </label>
-                      <input
-                        type="file"
-                        onChange={(e) => setFile(e.target.files[0])}
-                      />
-                    </div>
-                    {/* <div className="col-md-10 mb-3">
-                      <label htmlFor="" className="me-2">
-                        <h5>Quotation: </h5>
-                      </label>
-                      <input
-                        type="file"
-                        onChange={(e) => setQuotation(e.target.files[0])}
-                      />
-                    </div> */}
-                    <div className="col-md-4 text-center">
+                    <div className="d-flex justify-content-center">
                       <button
-                        className="btn btn-primary"
-                        type="submit"
+                        className="btn btn-success mt-2"
                         disabled={
-                          !reportName ||
-                          !file ||
-                          !inspectionDate ||
-                          !shownTo ||
-                          !meetTo
+                          !newContract.billToName || !newContract.billToAddress
                             ? true
                             : false
                         }
+                        onClick={handleContract}
                       >
-                        {reportLoading ? "Uploading" : "Submit Report"}
+                        Create New Report
                       </button>
                     </div>
-                  </form>
-                </div>
+                  </div>
+                  <div className="col-md-6 mt-5">
+                    <h5 className="text-danger text-center">
+                      If You Want To Upload Direct Report.
+                    </h5>
+                    <form
+                      onSubmit={handleSubmit}
+                      className="d-flex flex-column justify-content-center align-items-center"
+                    >
+                      <div className="col-md-10">
+                        <InputRow
+                          label="Report Name:"
+                          type="text"
+                          name="reportName"
+                          value={reportName}
+                          handleChange={handleChange}
+                        />
+                      </div>
+                      <div className="col-md-10">
+                        <InputRow
+                          label="Report Type:"
+                          type="text"
+                          name="meetTo"
+                          value={meetTo}
+                          handleChange={handleChange}
+                        />
+                      </div>
+                      <div className="col-md-10">
+                        <InputRow
+                          label="Inspection By:"
+                          type="text"
+                          name="shownTo"
+                          value={shownTo}
+                          handleChange={handleChange}
+                        />
+                      </div>
+                      <div className="col-md-10">
+                        <InputRow
+                          label="Inspection Date:"
+                          type="date"
+                          name="inspectionDate"
+                          value={inspectionDate}
+                          handleChange={handleChange}
+                        />
+                      </div>
+                      <div className="col-md-10 my-3">
+                        <label htmlFor="" className="me-2">
+                          <h5>Report: </h5>
+                        </label>
+                        <input
+                          type="file"
+                          onChange={(e) => setFile(e.target.files[0])}
+                        />
+                      </div>
+                      <div className="col-md-4 text-center">
+                        <button
+                          className="btn btn-primary"
+                          type="submit"
+                          disabled={
+                            !reportName ||
+                            !file ||
+                            !inspectionDate ||
+                            !shownTo ||
+                            !meetTo
+                              ? true
+                              : false
+                          }
+                        >
+                          {reportLoading ? "Uploading" : "Submit Report"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </>
               )}
             </>
           )}
